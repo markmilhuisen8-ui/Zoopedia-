@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency SOS Radar | Zoopedia</title>
+    <link rel="stylesheet" href="sos_radar.css?v=3.1"> 
+    <link rel="stylesheet" href="auth.css?v=3.1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="darkmode.js"></script>
+    <script src="auth.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    .header { background: transparent !important; border: none !important; }
+    </style>
+</head>
+<body>
+
+
+    <div class="app-container">
+        <!-- Header Refined -->
+        <header class="header">
+            <div class="header-left">
+                <span id="current-time">9:41</span>
+            </div>
+            <div class="header-center">
+                <h1 style="font-weight: 600; opacity: 0.9;">Emergency SOS</h1>
+            </div>
+            <div class="header-right">
+                <div class="header-actions">
+                    <button id="start-sos-header-btn" class="start-pill-btn">Start SOS</button>
+                    <button id="end-sos-btn" class="end-pill-btn">End</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- White-Line Radar UI (v30) -->
+            <div id="radar-mode" class="view">
+                <div class="radar-viewport-minimal">
+                    <div class="radar-ring r-1"></div>
+                    <div class="radar-ring r-2"></div>
+                    <div class="radar-ring r-3"></div>
+                    
+                    <div class="radar-sweep-ghost" id="main-sweep"></div>
+                    <div class="radar-ping-dot"></div>
+
+                    <!-- Satellite Lock Overlay -->
+                    <div id="radar-locked-overlay" class="radar-lock-cone-sector hidden-view">
+                        <div class="radar-inner-dot"></div>
+                        <div class="radar-lock-dot-top"></div>
+                        <div class="radar-lock-arc"></div>
+                    </div>
+                </div>
+                
+                <div class="status-indicator">
+                    <div id="searching-status-group">
+                        <span class="status-searching">SEARCHING FOR SERVICE</span>
+                        <h2 class="status-subtext" id="diag-subtext">Initializing Master Engine...</h2>
+                    </div>
+
+                    <div id="locked-status-group" class="hidden-view">
+                        <span class="status-label text-green" id="lock-label">CONNECTED</span>
+                        <h2 class="status-instruction" id="lock-instruction">Keep Pointing at Satellite to Send and Receive</h2>
+                    </div>
+                </div>
+
+                <!-- Tower Interaction Gate v33 -->
+                <div id="tower-gate-ui" class="tower-found-actions hidden-view">
+                    <button class="action-btn btn-green" id="manual-trigger-scan">START DIAGNOSTIC SCAN</button>
+                    <p class="gate-hint">Local Tower Link available in your area.</p>
+                </div>
+
+                <!-- Tower Interaction Hint (Only shown in Tower mode before start) -->
+                <div id="tower-hint-ui" class="status-indicator hidden-view" style="margin-top: 20px;">
+                    <p class="gate-hint" style="color: #888; font-size: 0.9rem;">Tap <span style="color:#34c759; font-weight:800;">Start SOS</span> to begin local diagnostic.</p>
+                </div>
+
+                <!-- Satellite Progress Footer (Only for Satellite mode) -->
+                <div id="radar-progress-view" class="progress-section hidden-view">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <span class="progress-label">Syncing data...</span>
+                </div>
+            </div>
+
+            <!-- Space Video View (Offline Cinematic) -->
+            <div id="space-cinematic-view" class="view hidden-view">
+                <video id="space-video" class="full-screen-video" playsinline muted>
+                    <source src="videos/space.mp4" type="video/mp4">
+                </video>
+                <div class="cinematic-text-overlay" id="space-text-overlay">
+                    <h2 id="cinematic-status-text">ESTABLISHING LINK</h2>
+                    <p id="cinematic-sub-text">Connecting to orbital relay...</p>
+                </div>
+            </div>
+
+            <!-- Satellite Dashboard (After Space Video) -->
+            <div id="satellite-dashboard" class="view hidden-view transparent-bg">
+                <div class="satellite-content">
+                    <div class="online-headline">
+                        <span class="headline-mixed">Orbital Network <span class="text-green">Linked</span></span>
+                    </div>
+                    <div class="tower-messaging-footer">
+                        <button class="action-pill-btn btn-red" id="call-911-sat"><i>📞</i> CALL 911</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tower Dashboard (Online Handler) -->
+            <div id="tower-dashboard" class="view hidden-view">
+                <div class="tower-bg-overlay"></div>
+                <div class="tower-content">
+                    <div class="online-headline">
+                        <span class="headline-small">LOCAL TOWER</span>
+                        <span class="headline-large">ONLINE</span>
+                    </div>
+                    <div class="tower-messaging-footer">
+                        <button class="action-pill-btn btn-red" id="call-911-tower"><i>📞</i> CALL 911</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 911 Emergency Calling Screen (Premium Simulation) -->
+            <div id="calling-screen" class="view hidden-view calling-bg">
+                <div class="calling-header">
+                    <span class="emergency-badge">Emergency SOS Call</span>
+                    <h2 class="caller-name">911 Emergency</h2>
+                    <span id="call-timer" class="call-duration">Dialing...</span>
+                    <p id="call-location-hud" style="color: #888; font-size: 0.9rem; margin-top: 15px; font-weight: 500;"></p>
+                </div>
+                
+                <!-- Visual Communication HUD -->
+                <div id="call-interaction-ui" class="communication-hud hidden-view">
+                    <div class="mic-container">
+                        <div class="mic-pulse"></div>
+                        <i class="mic-icon">🎙️</i>
+                    </div>
+                    <p class="talk-instruction">Speak now to the operator...</p>
+                    <button id="user-respond-btn" class="send-details-btn">
+                         I'M FINISHED SPEAKING
+                    </button>
+                </div>
+
+                <!-- Phone Utility Buttons -->
+                <div class="call-utilities">
+                    <div class="util-btn"><i>🔢</i><span>keypad</span></div>
+                    <div class="util-btn"><i>🔊</i><span>speaker</span></div>
+                    <div class="util-btn"><i>➕</i><span>add call</span></div>
+                </div>
+                
+                <div class="calling-actions">
+                    <button id="end-active-call" class="hang-up-btn">
+                        <i class="hang-up-icon">📞</i>
+                    </button>
+                </div>
+
+                <!-- Master Audio Engine (MPEG Asset Suite) -->
+                <audio id="audio-dialing" src="audio/sos/ring.mpeg" loop></audio>
+                <audio id="audio-911-intro" src="audio/sos/answering.mpeg"></audio>
+                <audio id="audio-911-dispatch" src="audio/sos/reply.mpeg"></audio>
+            </div>
+        </main>
+
+        <!-- Message Modal -->
+        <div id="send-msg-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Emergency Text</h2>
+                    <button class="close-modal">X</button>
+                </div>
+                <textarea id="modal-sos-message" placeholder="Type emergency message..."></textarea>
+                <button id="modal-send-sos" class="send-btn">Send Message</button>
+            </div>
+        </div>
+
+        <!-- Reply Modal -->
+        <div id="show-reply-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Dispatch Replies</h2>
+                    <button class="close-modal">X</button>
+                </div>
+                <div id="replies-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Master Engine v44.0 -->
+    <script src="sos_radar.js?v=3.1"></script>
+
+    <script>
+        // NUCLEAR CACHE RESET v44.0
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) { registration.unregister(); }
+                setTimeout(() => {
+                    navigator.serviceWorker.register('sw.js?v=44.0').then(() => {
+                        console.log('Clean Master Engine Registered v44.0');
+                    });
+                }, 200);
+            });
+        }
+    </script>
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+        <span class="separator">&gt;</span>
+        <span>SOS Radar</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode, [data-theme="dark"], [data-theme="dark"] body {
+    --zoopedia-footer-bg: #161617 !important;
+    --zoopedia-footer-text: #f5f5f7 !important;
+    --zoopedia-footer-link: #a1a1a6 !important;
+    --zoopedia-footer-link-hover: #f5f5f7 !important;
+    --zoopedia-footer-border: #424245 !important;
+    --zoopedia-footer-legal-text: #86868b !important;
+    --zoop-link-blue: #2997ff !important;
+}
+
+[data-theme="dark"] .zoopedia-footer {
+    background-color: #161617 !important;
+    color: #f5f5f7 !important;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7; /* Fallback */
+    background-color: var(--zoopedia-footer-bg);
+    color: #1d1d1f; /* Fallback */
+    color: var(--zoopedia-footer-text);
+    padding: 0 22px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.33337;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-top: 50px;
+    border-top: 1px solid #d2d2d7; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border);
+    display: block !important;
+    width: 100%;
+}
+
+.zoopedia-footer a {
+    color: #424245; /* Fallback */
+    color: var(--zoopedia-footer-link);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f; /* Fallback */
+    color: var(--zoopedia-footer-link-hover);
+    text-decoration: underline;
+}
+
+.footer-content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 0 40px;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px;
+    border-bottom: 1px solid #d2d2d7; /* Fallback */
+    border-bottom: 1px solid var(--zoopedia-footer-border);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6e6e73; /* Fallback */
+    color: var(--zoopedia-footer-legal-text);
+}
+
+.footer-breadcrumb a {
+    color: #6e6e73; /* Fallback */
+    color: var(--zoopedia-footer-legal-text);
+}
+
+.footer-breadcrumb i {
+    font-size: 14px;
+}
+
+.footer-breadcrumb span.separator {
+    color: #d2d2d7; /* Fallback */
+    color: var(--zoopedia-footer-border);
+    font-size: 10px;
+}
+
+/* Directory Columns */
+.footer-directory {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 20px;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 150px;
+    margin-bottom: 20px;
+}
+
+.footer-column h3 {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0 0 0.8em;
+    color: #1d1d1f; /* Fallback */
+    color: var(--zoopedia-footer-text);
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em;
+    list-style: none !important;
+}
+
+/* More ways to shop */
+.footer-more-ways {
+    padding: 17px 0 11px;
+    border-bottom: 1px solid #d2d2d7; /* Fallback */
+    border-bottom: 1px solid var(--zoopedia-footer-border);
+    color: #6e6e73; /* Fallback */
+    color: var(--zoopedia-footer-legal-text);
+    margin-bottom: 20px;
+}
+
+.footer-more-ways a {
+    color: #0066cc; /* Fallback */
+    color: var(--zoop-link-blue);
+}
+
+/* Legal Section */
+.footer-legal {
+    padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    color: #6e6e73; /* Fallback */
+    color: var(--zoopedia-footer-legal-text);
+}
+
+.footer-legal-copyright {
+    margin-right: 30px;
+    margin-bottom: 10px;
+}
+
+.footer-legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 15px;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.footer-legal-links a {
+    border-right: 1px solid #d2d2d7; /* Fallback */
+    border-right: 1px solid var(--zoopedia-footer-border);
+    padding-right: 15px;
+    white-space: nowrap;
+}
+
+.footer-legal-links a:last-child {
+    border-right: none;
+}
+
+.footer-legal-locale {
+    margin-top: 0;
+}
+
+/* Mobile Accordion */
+@media only screen and (max-width: 767px) {
+    .footer-directory {
+        flex-direction: column;
+    }
+    
+    .footer-column {
+        border-bottom: 1px solid #d2d2d7; /* Fallback */
+        border-bottom: 1px solid var(--zoopedia-footer-border);
+        margin-bottom: 0;
+    }
+    
+    .footer-column h3 {
+        padding: 10px 0;
+        margin-bottom: 0;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none;
+    }
+    
+    .footer-column h3::after {
+        content: '+';
+        font-weight: normal;
+        transition: transform 0.3s ease;
+    }
+    
+    .footer-column.active h3::after {
+        transform: rotate(45deg);
+    }
+    
+    .footer-column ul {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        display: none;
+    }
+    
+    .footer-column.active ul {
+        max-height: 500px;
+        padding-bottom: 15px;
+        display: block;
+    }
+    
+    .footer-legal {
+        flex-direction: column;
+    }
+    
+    .footer-legal-links {
+        margin: 10px 0;
+        gap: 10px 0;
+    }
+    
+    .footer-legal-links a {
+        border-right: none;
+        padding-right: 15px;
+        position: relative;
+    }
+    
+    .footer-legal-links a::after {
+        content: '|';
+        position: absolute;
+        right: 5px;
+        color: #d2d2d7; /* Fallback */
+        color: var(--zoopedia-footer-border);
+    }
+    
+    .footer-legal-links a:last-child::after {
+        display: none;
+    }
+}

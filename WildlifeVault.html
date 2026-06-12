@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <link rel="stylesheet" href="mobileresponse.css">
+   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   <!-- Scripts moved to end -->
+   
+   <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="zoopedia_feature.css">
+    <link rel="stylesheet" href="darkmode.css">
+    <script src="darkmode.js"></script>
+    <link rel="stylesheet" href="auth.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="auth.js"></script>
+    <title>Animal Vault - Zoopedia Prime</title>
+    <!-- MediaPipe Hand Tracking Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="handtracking.js" defer></script>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+
+<body>
+    <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+<!-- Search -->
+
+<!-- Premium Redesigned Search Bar -->
+<div class="vault-search-container container mt-5">
+    <div class="search-pill-wrapper">
+        <div class="search-icon-box">
+            <i class="fas fa-search"></i>
+        </div>
+        <input type="text" id="animalSearch" class="vault-search-input" placeholder="Search the Zoopedia Vault...">
+        <div class="search-dynamic-line"></div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div id="animalContainer" class="row g-4">
+        </div>
+</div>
+
+<div id="persistent-ai-container">
+    <div class="ai-controls-panel">
+        <div class="persona-switch-horizontal">
+            <span class="mini-label">Alex</span>
+            <label class="switch">
+                <input type="checkbox" id="persona-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="mini-label">Sussi</span>
+        </div>
+        <button id="ai-stop-btn" title="Stop AI"><i class="fa-solid fa-circle-stop"></i> STOP</button>
+    </div>
+
+    <div id="normad-container" class="idle">
+        <div class="orb"></div>
+    </div>
+
+    <div id="normad-caption-bar" style="display: none;"></div>
+</div>
+
+    <!-- Hand Tracking Infrastructure -->
+    <video class="input_video" style="display:none" playsinline></video>
+    <canvas class="output_canvas" style="display:none"></canvas>
+    <div id="hand-cursor" class="hand-cursor"></div>
+
+    <!-- Hand Tracking Permission Modal -->
+    <div id="hand-tracking-prompt" class="hand-prompt-overlay" style="display:none">
+      <div class="hand-prompt-card">
+          <div class="hand-prompt-icon"><i class="fas fa-hand-sparkles"></i></div>
+          <h3>Magic Hand Interaction</h3>
+          <p>Control Zoopedia Prime with your finger! Our AI tracks your movement in real-time. Video is processed locally and never saved.</p>
+          <div class="hand-prompt-actions">
+              <button id="btn-deny-hand" class="btn-deny">Not Now</button>
+              <button id="btn-agree-hand" class="btn-agree">Enable Magic</button>
+          </div>
+      </div>
+    </div>
+
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+  <script src="animaldb.js"></script>
+  <script src="Samanthabrain.js"></script>
+  <script src="Alexbrain.js"></script>
+  <script src="NomadAi.js"></script>
+  <script src="main.js"></script>
+  <script src="mediacontrols.js" defer></script>
+  <script src="handtracking.js"></script>
+  <script src="auth.js?v=3.0"></script>
+</body>
+</html>

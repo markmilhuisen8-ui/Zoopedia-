@@ -1,0 +1,668 @@
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-red: #ff3b30;
+    --accent-green: #34c759;
+    --accent-yellow: #ffd60a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+    background: #000; 
+    color: #fff; 
+    font-family: 'Inter', sans-serif; 
+    overflow: hidden; 
+    width: 100vw; 
+    height: 100vh; 
+}
+.app-container { 
+    width: 100%; 
+    height: 100%; 
+    position: relative; 
+}
+
+.view {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    transition: opacity 1s; 
+    opacity: 1; 
+    z-index: 10;
+}
+.hidden-view { 
+    opacity: 0 !important; 
+    pointer-events: none !important; 
+}
+
+/* Header */
+.header { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 30px 40px; 
+    z-index: 1000; 
+    align-items: center;
+}
+.header-center { 
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+.header-center h1 { 
+    font-size: 1.1rem; 
+    font-weight: 500; 
+    letter-spacing: 0.5px; 
+    color: #fff; 
+}
+.header-left span { 
+    font-size: 1.1rem; 
+    font-weight: 500; 
+}
+
+.header-actions { 
+    display: flex; 
+    gap: 10px; 
+}
+.start-pill-btn { 
+    background: #34c759; 
+    color: #fff; 
+    border: none; 
+    padding: 6px 18px; 
+    border-radius: 15px; 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    cursor: pointer; 
+    transition: all 0.3s; 
+}
+.end-pill-btn { 
+    background: #ff3b30; 
+    color: #fff; 
+    border: none; 
+    padding: 6px 18px; 
+    border-radius: 15px; 
+    font-weight: 600; 
+    font-size: 0.9rem; 
+    cursor: pointer; 
+}
+.btn-locked { 
+    background: #333 !important; 
+    color: #666 !important; 
+    cursor: not-allowed !important; 
+    opacity: 0.7; 
+}
+
+/* DYNAMIC TARGET ACQUISITION (v32) */
+.radar-viewport-minimal { 
+    width: 320px; 
+    height: 320px; 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-top: 110px; 
+}
+.radar-ring { 
+    position: absolute; 
+    border: 1.5px solid rgba(255,255,255,0.12); 
+    border-radius: 50%; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+}
+.r-1 { 
+    width: 100%; 
+    height: 100%; 
+}
+.r-2 { 
+    width: 68%; 
+    height: 68%; 
+}
+.r-3 { 
+    width: 36%; 
+    height: 36%; 
+}
+
+.radar-sweep-ghost { 
+    position: absolute; 
+    width: 50%; 
+    height: 2px; 
+    background: linear-gradient(90deg, transparent 40%, rgba(52, 199, 89, 0.6)); 
+    top: 50%; 
+    left: 50%; 
+    transform-origin: left; 
+    z-index: 5; 
+    transform: rotate(0deg); /* Controlled via JS */
+}
+
+.radar-ping-dot { 
+    position: absolute; 
+    width: 16px; 
+    height: 16px; 
+    background: #fff; 
+    border-radius: 50%; 
+    z-index: 20; 
+    box-shadow: 0 0 10px #fff; 
+    display: none; /* Shown via JS when randomized */
+}
+
+/* 3-Blink Sequence */
+.dot-blink-sequence { animation: triple-blink 1.5s step-end forwards; }
+@keyframes triple-blink {
+    0%, 20%, 40%, 60% { background: #34c759; box-shadow: 0 0 20px #34c759; opacity: 1; }
+    10%, 30%, 50%, 70% { opacity: 0; }
+    100% { background: #34c759; box-shadow: 0 0 20px #34c759; opacity: 1; }
+}
+/* FOOTER BUTTONS (Matte Design) */
+.searching-actions-footer { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    align-items: center; 
+    margin-top: 50px; 
+}
+.action-btn { 
+    width: 260px; 
+    padding: 16px; 
+    border-radius: 20px; 
+    border: none;
+    font-weight: 800; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    color: #fff;
+    letter-spacing: 1px; 
+    transition: transform 0.2s;
+}
+.action-btn:active { 
+    transform: scale(0.95); 
+}
+.btn-green { 
+    background: #34c759; 
+}
+.btn-red { 
+    background: #ff3b30; 
+}
+
+.radar-target-dot { 
+    position: absolute; 
+    width: 16px; 
+    height: 16px; 
+    background: #fff; 
+    border-radius: 50%; 
+    top: 31%; 
+    left: 51.5%; 
+    transform: translate(-50%, -50%); 
+    z-index: 20;
+    box-shadow: 0 0 15px #fff, 0 0 30px rgba(255,255,255,0.2); 
+    animation: dot-ping-sync 4s infinite linear; /* Synchronize with sweep */
+}
+
+@keyframes dot-ping-sync {
+    0%, 70%, 80%, 100% { background: #fff; box-shadow: 0 0 15px #fff; }
+    75% { background: #17c964; box-shadow: 0 0 25px #17c964; } /* Highlighting Green */
+}
+
+/* TYPOGRAPHY (Screenshot Sync) */
+.status-indicator { 
+    text-align: center; 
+    margin-top: 60px; 
+    padding: 0 20px; 
+}
+.status-searching { 
+    color: #888; 
+    font-weight: 700; 
+    font-size: 0.75rem; 
+    letter-spacing: 2.5px; 
+    display: block; 
+    margin-bottom: 25px; 
+}
+.status-subtext { 
+    font-size: 1.6rem; 
+    font-weight: 600; 
+    color: #fff; 
+    line-height: 1.3; 
+    letter-spacing: -0.3px; 
+    max-width: 420px; 
+    margin: 0 auto; 
+}
+
+/* FOOTER BUTTONS (Matte Design) */
+.searching-actions-footer { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    align-items: center; 
+    margin-top: 40px; 
+}
+.pill-outline {
+    background: #111; 
+    border: 1px solid rgba(255,255,255,0.05); 
+    padding: 10px 25px; 
+    border-radius: 20px;
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    cursor: pointer; 
+    width: fit-content; 
+    min-width: 230px;
+    font-weight: 600; 
+    font-size: 0.85rem; 
+}
+.pill-outline i { 
+    font-style: normal; 
+    font-size: 1rem; 
+}
+.btn-yellow i { 
+    color: #f2c94c; 
+} /* Gold/Yellow Icon */
+.btn-green i { 
+    color: #27ae60; 
+}  /* Emerald Icon */
+.pill-outline span { 
+    color: #f2c94c; 
+} /* Corrected Text Colors */
+.btn-green span { 
+    color: #27ae60; 
+}
+
+/* SUCCESSFUL SATELLITE HANDSHAKE UI */
+.radar-lock-cone-sector {
+    position: absolute; 
+    width: 140%; 
+    height: 140%; 
+    z-index: 100;
+    background: conic-gradient(from -30deg at 50% 100%, rgba(52, 199, 89, 0.4) 0deg, rgba(52, 199, 89, 0.4) 60deg, transparent 60deg);
+    clip-path: circle(38% at 50% 38%);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+.radar-inner-dot { 
+    width: 40px; 
+    height: 40px; 
+    background: #34c759; 
+    border-radius: 50%; 
+    position: absolute; 
+    top: 28%; 
+    box-shadow: 0 0 15px rgba(52, 199, 89, 0.4); 
+    z-index: 110; 
+}
+.radar-lock-dot-top { width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; top: 1.5%; left: 50%; transform: translateX(-50%); box-shadow: 0 0 10px #fff; z-index: 120; }
+.radar-lock-arc { 
+    position: absolute; 
+    width: 45px; 
+    height: 10px; 
+    border-top: 3.5px solid #00f2ff; 
+    border-radius: 50%; 
+    top: 12%; 
+    opacity: 0.6; 
+    z-index: 115; 
+}
+
+.progress-section { 
+    margin-top: 40px; 
+    width: 100%; 
+    padding: 0 60px; 
+    text-align: center; 
+}
+.progress-bar { 
+    width: 100%; 
+    height: 6px; 
+    background: #333; 
+    border-radius: 3px; 
+    position: relative; 
+    overflow: hidden; 
+    margin-bottom: 15px; 
+}
+.progress-fill { 
+    position: absolute; 
+    width: 60%; 
+    height: 100%; 
+    background: #fff; 
+    animation: progress-slide 3s infinite linear; 
+}
+@keyframes progress-slide { 
+    from { left: -60%; } 
+    to { left: 100%; } 
+}
+.progress-label { 
+    color: #fff; 
+    font-size: 1rem; 
+    font-weight: 500; 
+    opacity: 0.9; 
+}
+
+.radar-footer { 
+    position: absolute; 
+    bottom: 50px; 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+    padding: 0 30px; 
+}
+.show-messages-btn {
+    width: 100%; 
+    background: #2c2c2e; 
+    border: none; 
+    padding: 18px; 
+    border-radius: 20px;
+    color: var(--accent-green); 
+    font-size: 1.2rem; 
+    font-weight: 700;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 12px; 
+    cursor: pointer;
+}
+
+/* Video View */
+.full-screen-video { 
+    width: 100vw; 
+    height: 100vh; 
+    object-fit: cover; 
+}
+.cinematic-text-overlay { 
+    position: absolute; 
+    bottom: 80px; 
+    width: 100%; 
+    text-align: center; 
+    z-index: 5100; 
+}
+.cinematic-text-overlay h2 { 
+    font-size: 2.2rem; 
+    font-weight: 800; 
+    letter-spacing: 6px; 
+    color: #fff; 
+    text-shadow: 0 0 20px #000; 
+}
+
+/* Dashboard Styles */
+.tower-bg-overlay { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: url('img/tower_bg.png') no-repeat center center; 
+    background-size: cover; 
+    z-index: 10; 
+    opacity: 0.7; 
+}
+.transparent-bg { 
+    background: transparent !important; 
+    z-index: 6000; 
+}
+.tower-content, .satellite-content { 
+    position: relative; 
+    z-index: 100; 
+    width: 100%; 
+    height: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; 
+    padding: 100px 60px; 
+}
+
+.online-headline { 
+    margin-top: 50px; 
+}
+.headline-small { 
+    font-size: 3.5rem; 
+    font-weight: 800; 
+    line-height: 1.1; 
+    color: #fff; 
+}
+.headline-large { 
+    font-size: 6.5rem; 
+    font-weight: 900; 
+    color: var(--accent-green); 
+    line-height: 1; 
+    letter-spacing: -3px; 
+}
+
+/* Reference Match Text */
+.headline-mixed {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -2px;
+}
+.text-green { color: var(--accent-green); }
+
+.tower-messaging-footer { 
+    position: absolute; 
+    bottom: 50px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+.action-pill-btn {
+    background: rgba(17, 17, 17, 0.8); 
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255,255,255,0.05); 
+    padding: 14px 40px; 
+    border-radius: 35px; 
+    font-weight: 700; 
+    font-size: 1rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    cursor: pointer; 
+    min-width: 280px;
+    transition: all 0.3s;
+    pointer-events: auto !important;
+}
+.action-pill-btn:hover { 
+    transform: scale(1.05); 
+    background: rgba(30,30,30,0.9); 
+}
+
+.btn-yellow { 
+    color: var(--accent-yellow); 
+}
+.btn-green { 
+    color: var(--accent-green); 
+}
+.btn-red { 
+    color: #ff453a; 
+    font-weight: 800; 
+}
+
+/* Emergency Elements */
+.emergency-call-btn { 
+    background: #ff3b30; 
+    color: #fff; 
+    border: none; 
+    padding: 20px 60px; 
+    border-radius: 40px; 
+    font-size: 1.5rem; 
+    font-weight: 800; 
+    margin-top: 20px; 
+    cursor: pointer; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center;
+}
+
+/* Modals */
+.modal-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.4); 
+    backdrop-filter: blur(30px); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 10000; 
+}
+.modal-content { 
+    background: rgba(30,30,32,0.8); 
+    padding: 40px; 
+    border-radius: 35px; 
+    width: 90%; 
+    max-width: 480px; 
+    border: 1px solid rgba(255,255,255,0.1); 
+}
+.send-btn { 
+    width: 100%; 
+    padding: 18px; 
+    border-radius: 30px; 
+    border: none; 
+    background: #fff; 
+    color: #000; 
+    font-weight: 700; 
+    cursor: pointer; 
+}
+
+/* 911 Calling Screen UI (HUD Refined) */
+.calling-bg { 
+    background: radial-gradient(circle at center, #1c1c1e 0%, #000 100%); 
+    z-index: 100000 !important; 
+    display: none; 
+}
+.calling-header { 
+    text-align: center; 
+    margin-top: -160px; 
+}
+.emergency-badge { 
+    color: #ff3b30; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    font-weight: 700; 
+    font-size: 0.8rem; 
+    display: block; 
+    margin-bottom: 20px; 
+}
+.caller-name { 
+    font-size: 3.5rem; 
+    font-weight: 800; 
+    margin-bottom: 5px; 
+}
+.call-duration { 
+    font-size: 1.2rem; 
+    color: #888; 
+    font-weight: 500; 
+    font-family: 'Roboto Mono', monospace; 
+}
+
+/* Communication HUD */
+.communication-hud { 
+    margin-top: 40px; 
+    text-align: center; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 25px; 
+}
+.mic-container { 
+    position: relative; 
+    width: 100px; 
+    height: 100px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.mic-icon { 
+    font-style: normal; 
+    font-size: 3rem; 
+    position: relative; 
+    z-index: 2; 
+}
+.mic-pulse { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 50%; 
+    background: rgba(52, 199, 89, 0.2); 
+    animation: mic-pulse 2s infinite; 
+}
+@keyframes mic-pulse { 
+    0% { transform: scale(1); opacity: 0.8; } 
+    100% { transform: scale(2); opacity: 0; } 
+}
+.talk-instruction { 
+    font-size: 1.1rem; 
+    color: #fff; 
+    font-weight: 600; 
+    opacity: 0.7; 
+}
+
+.send-details-btn { 
+    background: #34c759; color: #fff; border: none; padding: 15px 35px; border-radius: 30px; 
+    font-weight: 800; font-size: 0.9rem; cursor: pointer; letter-spacing: 1px;
+}
+
+/* Utilities Grid */
+.call-utilities { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px; 
+    margin-top: 60px; 
+    width: 100%; 
+    max-width: 320px; 
+}
+.util-btn { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 8px; 
+    opacity: 0.6; 
+}
+.util-btn i { 
+    width: 60px; 
+    height: 60px; 
+    background: rgba(255,255,255,0.1); 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 1.5rem; 
+    font-style: normal; 
+}
+.util-btn span { 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    color: #fff; 
+    text-transform: lowercase; 
+}
+
+.calling-actions { 
+    position: absolute; 
+    bottom: 80px; 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+}
+.hang-up-btn { 
+    width: 80px; 
+    height: 80px; 
+    background: #ff3b30; 
+    border-radius: 50%; 
+    border: none; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255, 59, 48, 0.4);
+}
+.hang-up-icon { 
+    font-style: normal; 
+    font-size: 2.2rem; 
+    transform: rotate(135deg); 
+    color: #fff; 
+    display: block; 
+}

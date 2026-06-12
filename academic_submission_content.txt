@@ -1,0 +1,36 @@
+// Zoopedia Ecosystem Portfolio
+// Viva Presentation Guide: 6 Features & Academic Criteria Mapping
+//
+// Member 1 Presentation
+// 1. The Research Hub Feature (Master Criteria Implementation)
+// Criteria Fulfilled: Storage (JSON >5 pairs), Server (PHP GET All/Specific, POST, json_decode), Functionalities (Read/Add).
+// Role: This feature was engineered specifically to hit every single core academic requirement. It acts as the master database for academic notes.
+// Storage Requirement (JSON File): Data is stored in research_papers.json containing 7 key/value pairs.
+// Server Requirement (PHP Backend): Handles GET requests to return all records or a specific record by id, and POST requests to store new records.
+//
+// Member 2 Presentation
+// 2. Cloud Digital Library Feature
+// Criteria Fulfilled: UI Integration, Server Communication, AJAX Data Parsing.
+// Role: Demonstrates complex frontend UI rendering based on server data. Uses a MySQL backend for large-scale file storage.
+// UI & AJAX Fetching: Uses async fetchDrive() to GET data from library_service.php?action=load and dynamically builds the library grid.
+//
+// Member 3 Presentation
+// 3. Mother's Day Card Creator
+// Criteria Fulfilled: Textbox to Server integration, Advanced POST Requests.
+// Role: Demonstrates user input manipulation via UI textboxes, rendered to a canvas, then uploaded as an image blob via AJAX POST.
+//
+// Member 4 Presentation
+// 4. QR Code Magic Hand-off
+// Criteria Fulfilled: Asynchronous UI Polling, Real-time AJAX.
+// Role: Demonstrates continuous state-aware communication between UI and server using recursive AJAX polling to detect mobile QR scans.
+//
+// Member 5 Presentation
+// 5. Dynamic SOS Feature
+// Criteria Fulfilled: Advanced UI API Integration, AJAX POST.
+// Role: Combines the browser's Geolocation API with an AJAX POST to send latitude, longitude, and timestamp to the server.
+//
+// Member 6 Presentation
+// 6. Tap to Pay Feature
+// Criteria Fulfilled: Asynchronous Form Handling, Server Response Parsing.
+// Role: Demonstrates secure data transmission where donation amounts are validated and sent via AJAX without page reload, handling success and error responses.
+//

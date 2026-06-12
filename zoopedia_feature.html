@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoopedia Prime | Featured</title>
+    <link rel="stylesheet" href="zoopedia_feature.css">
+    <link rel="stylesheet" href="darkmode.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="auth.css?v=3.0">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="darkmode.js"></script>
+    <script src="auth.js?v=3.0"></script>
+    <script src="library_core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+<body>
+                <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="top-promo">
+        Explore the all-new Zoopedia Archive. <a href="#">Explore now ></a>
+    </div>
+
+    <!-- Section 1: Hero (Full Cover Banner) -->
+    <section class="hero-large">
+        <div class="hero-text-overlay">
+            <div class="hero-ctas">
+                <a href="learn_more.html"><button class="btn-blue-pill">Learn more</button></a>
+                <a href="WildlifeVault.html"><button class="btn-outline-pill">Visit</button></a>
+            </div>
+        </div>
+        <img src="img/fet%20page/hero.png" alt="Zoopedia Vault Banner" class="hero-img-huge">
+    </section>
+    
+    
+    <!-- Intro Overview Section -->
+    <section class="intro-text-section">
+        <div class="intro-text-wrapper">
+            <h2 class="intro-title reveal-on-scroll">Innovation at its heart.</h2>
+            <div class="intro-text-content">
+                Whether you're exploring the wonders of the natural world or managing your digital workspace, our latest update brings a suite of powerful, high-tech features designed to elevate your experience. We’ve blended cutting-edge design with intuitive functionality to make every interaction more immersive.
+            </div>
+        </div>
+    </section>
+    
+    <!-- Grid Section -->
+    <section class="grid-section">
+        <div class="zoopedia-grid">
+            
+            <!-- Card 1: -->
+            <div class="grid-card bg-black">
+                <div class="card-content-overlay content-bottom content-bottom-low">
+                    <div class="card-btns4">
+                        <a href="learn_more.html#mother"><button class="btn-blue-pill">Learn more</button></a>
+                        <a href="memory ban.html"><button class="btn-outline-white2">Visit</button></a>
+                    </div>
+                </div>
+                <img src="img/fet page/motherday.png" alt="Mother Banner" class="card-img-full" loading="lazy">
+            </div>
+
+            <!-- Card 2: -->
+            <div class="grid-card bg-black">
+                <div class="card-content-overlay content-bottom ">
+                    <div class="card-btns">
+                        <a href="learn_more.html#sos"><button class="btn-blue-pill">Learn more</button></a>
+                        <a href="sos_radar.html"><button class="btn-outline-white">Visit</button></a>
+                    </div>
+                </div>
+                <img src="img/fet%20page/SOS.png" alt="Ai Pro" class="card-img-full" loading="lazy">
+            </div>
+
+             <!-- Card 3:  -->
+            <div class="grid-card bg-black">
+                <div class="card-content-overlay content-bottom ">
+                    <div class="card-btns">
+                        <a href="learn_more.html"><button class="btn-blue-pill">Learn more</button></a>
+                        <a href="research_lab.html"><button class="btn-outline-white">Visit</button></a>
+                    </div>
+                </div>
+                <img src="img/fet%20page/JONESA.png" alt="Ai Pro" class="card-img-full" loading="lazy">
+            </div>
+
+            <!-- Card 4: -->
+            <div class="grid-card bg-black">
+                <div class="card-content-overlay content-bottom ">
+                    <div class="card-btns">
+                        <a href="learn_more.html#cloud"><button class="btn-blue-pill">Learn more</button></a>
+                        <a href="DigitalLibrary.html"><button class="btn-outline-white2">Visit</button></a>
+                    </div>
+                </div>
+                <img src="img/fet%20page/Library.png" alt="Ai Pro" class="card-img-full" loading="lazy">
+            </div>
+
+            <!-- Card 5:  -->
+               <div class="grid-card bg-black">
+                <div class="card-content-overlay content-bottom" style="align-items: flex-end; justify-content: flex-end; padding: 0 45px 45px 0; width: 100%; height: 100%; position: absolute; top: 0; left: 0;">
+                    <div class="card-btns5 reveal-on-scroll">
+                        <a href="learn_more.html#qr"><button class="btn-blue-pill">Learn more</button></a>
+                    </div>
+                </div>
+                <!-- Card-fitted QR Overlay -->
+                <div id="card-qr-container" style="position: absolute; top: 62%; left: 40.2%; transform: translate(-50%, -50%) rotate(-11deg); z-index: 10; background: #fff; padding: 5px; border-radius: 4px; opacity: 1; box-shadow: 0 4px 15px rgba(0,0,0,0.2);"></div>
+                <img src="img/fet page/qr.jpg" alt="Ai Pro" class="card-img-full" loading="lazy">
+            </div>
+
+            <!-- Card 6:  -->
+            <div class="grid-card bg-black">
+                <div class="card-content-overlay content-bottom ">
+                    <div class="card-btns5">
+                        <a href="learn_more.html#pay"><button class="btn-blue-pill">Learn more</button></a>
+                        <button class="btn-outline-white2" id="feature-tap-btn">Register</button>
+                    </div>
+                </div>
+                <img src="img/fet%20page/tap%20tap%20fet.png" alt="Ai Pro" class="card-img-full" loading="lazy">
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Endless Entertainment Carousel -->
+    <section class="carousel-section">
+        <h2 class="carousel-title reveal-on-scroll">Endless entertainment.</h2>
+        <div class="carousel-inner" id="entertain-slider">
+            <div class="slide-item wide">
+                <img src="img/fet%20page/kangaroo%20slider.png" alt="Kangaroo">
+                <div class="slide-ui-bottom-row">
+                    <a href="#"><button class="btn-white-pill-small">Streaming on Zoopedia Prime</button></a>
+                </div>
+            </div>
+            <div class="slide-item wide">
+                <img src="img/fet%20page/Jurassic%20Park.png" alt="Jurassic Park">
+                <div class="slide-ui-bottom-row">
+                    <a href="#"><button class="btn-white-pill-small">Streaming on Zoopedia Prime</button></a>
+                </div>
+            </div>
+            <div class="slide-item wide">
+                <img src="img/fet%20page/Lion%20King.png" alt="Lion King">
+                <div class="slide-ui-bottom-row">
+                    <a href="story.html"><button class="btn-white-pill-small">Audiobooks on Zoopedia Prime</button></a>
+                </div>
+            </div>
+            <div class="slide-item wide">
+                <img src="img/fet%20page/Jones.png" alt="Jones">
+                <div class="slide-ui-bottom-row">
+                    <a href="#"><button class="btn-white-pill-small">Streaming on Zoopedia Prime</button></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slider 2: Small Service Cards -->
+    <section class="carousel-section" style="padding-top: 0px;">
+        <div class="carousel-inner" id="slider-2">
+            <div class="glass-card-item">
+                <img src="img/fet%20page/edu%20ban1.png" alt="Fact">
+                <div class="glass-card-logo-tr">Fact</div>
+                <div class="glass-card-footer">
+                     <button class="btn-white-pill-mini" onclick="saveToLibrary({title: 'Educational Fact: Ecosystems', type: 'image', url: 'img/fet%20page/edu ban1.png'})">Save to Library</button>
+                </div>
+            </div>
+            <div class="glass-card-item">
+                <img src="img/fet%20page/RUNNER.png" alt="Arcade">
+                <div class="glass-card-logo-tr"> Arcade</div>
+                <div class="glass-card-footer">
+                     <a href="gamepage.html#wild-runner"><button class="btn-white-pill-mini">Play now</button></a>
+                </div>
+            </div>
+            <div class="glass-card-item">
+                <img src="img/fet%20page/edu%20ban2.png" alt="Fact">
+                <div class="glass-card-logo-tr">Fact</div>
+                <div class="glass-card-footer">
+                     <button class="btn-white-pill-mini" onclick="saveToLibrary({title: 'Educational Fact: Wildlife', type: 'image', url: 'img/fet%20page/edu ban2.png'})">Save to Library</button>
+                </div>
+            </div>
+               <div class="glass-card-item">
+                <img src="img/fet%20page/fOLLOWER.png" alt="Arcade">
+                <div class="glass-card-logo-tr"> Arcade</div>
+                <div class="glass-card-footer">
+                     <a href="gamepage.html#follower"><button class="btn-white-pill-mini">Play now</button></a>
+                </div>
+            </div>
+            <div class="glass-card-item">
+                <img src="img/fet%20page/SHARKS.png" alt="Fact">
+                <div class="glass-card-logo-tr">Fact</div>
+                <div class="glass-card-footer">
+                     <button class="btn-white-pill-mini" onclick="saveToLibrary({title: 'Educational Fact: Marine Life', type: 'image', url: 'img/fet%20page/SHARKS.png'})">Save to Library</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Notes -->
+    <section class="footer-notes">
+        <ol>
+            <li>Offer available to approved customers who participate in the Zoopedia Recycle program. Terms and conditions apply.</li>
+            <li>Feature and service availability vary by country and ecosystem. Some AI features require a persistent internet connection.</li>
+            <li>Storage and Vault upgrades are subject to subscription verification. All data is processed locally with end-to-end encryption.</li>
+        </ol>
+    </section>
+
+      <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+
+
+    <!-- Morphing Scan Popup -->
+    <div class="morph-popup-overlay" id="scan-detected-popup">
+        <div class="morph-popup-content">
+            <div class="morph-popup-icon"><i class="fas fa-mobile-screen-button"></i></div>
+            <h3>Device Connected!</h3>
+            <p>Your mobile device has successfully scanned the portal. Would you like to open the Global Library on this PC as well?</p>
+            <div class="popup-btn-group">
+                <button class="btn-blue-pill" onclick="handleScanSuccess(true)">Yes, Open</button>
+                <button class="btn-outline-pill" onclick="handleScanSuccess(false)">Not Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setupInfiniteLoop(id, delay) {
+            const slider = document.getElementById(id);
+            if (!slider || slider.children.length === 0) return;
+
+            // Clone all children to create the infinite effect
+            const originalChildren = Array.from(slider.children);
+            originalChildren.forEach(child => {
+                const clone = child.cloneNode(true);
+                slider.appendChild(clone);
+            });
+
+            let index = 0;
+            const totalOriginal = originalChildren.length;
+
+            setInterval(() => {
+                index++;
+                
+                // Smoothly slide to the next item
+                slider.scrollTo({ 
+                    left: slider.children[index].offsetLeft, 
+                    behavior: 'smooth' 
+                });
+
+                // If we've reached the start of the cloned items
+                if (index >= totalOriginal) {
+                    // Wait for the smooth scroll to finish (approx 600ms) 
+                    // before instantly snapping back to the real index 0
+                    setTimeout(() => {
+                        slider.scrollTo({ left: 0, behavior: 'auto' });
+                        index = 0;
+                    }, 700);
+                }
+            }, delay);
+
+            // Handle manual scroll reset (Optional: keeps it loose if user swipes)
+            slider.addEventListener('scroll', () => {
+                const maxScroll = slider.children[totalOriginal].offsetLeft;
+                if (slider.scrollLeft >= maxScroll + 10) {
+                    // Pre-emptive snap if they scroll manually too far
+                    // slider.scrollLeft -= maxScroll; 
+                }
+            });
+        }
+
+        // Initialize with staggered timing for a dynamic feel
+        setupInfiniteLoop('entertain-slider', 4000);
+        setupInfiniteLoop('slider-2', 5000);
+
+        // Initialize QR Code for Magic Session Transfer
+        window.addEventListener('DOMContentLoaded', () => {
+            const qrContainer = document.getElementById("card-qr-container");
+            if (qrContainer) {
+                const generateQR = async () => {
+                    let baseUrl = "";
+                    
+                    // Priority 1: Try to get ngrok tunnel (with 1s timeout)
+                    try {
+                        const controller = new AbortController();
+                        const timeoutId = setTimeout(() => controller.abort(), 1000);
+                        const tunnelRes = await fetch('http://127.0.0.1:4040/api/tunnels', { signal: controller.signal });
+                        clearTimeout(timeoutId);
+                        const tunnelData = await tunnelRes.json();
+                        if (tunnelData.tunnels && tunnelData.tunnels.length > 0) {
+                            baseUrl = tunnelData.tunnels[0].public_url;
+                        }
+                    } catch (e) {
+                        console.log("Tunnel check failed or timed out.");
+                    }
+
+                    // Priority 2: Try to get Local LAN IP
+                    if (!baseUrl) {
+                        try {
+                            const ipRes = await fetch('get_local_ip.php');
+                            const ipData = await ipRes.json();
+                            if (ipData.ip && ipData.ip !== '127.0.0.1') {
+                                baseUrl = `http://${ipData.ip}`;
+                            }
+                        } catch (e) {
+                            console.log("Local IP fetch failed.");
+                        }
+                    }
+
+                    // Priority 3: Fallback to window.location.hostname (if not localhost)
+                    if (!baseUrl) {
+                        const host = window.location.hostname;
+                        const port = window.location.port ? `:${window.location.port}` : "";
+                        if (host !== 'localhost' && host !== '127.0.0.1') {
+                            baseUrl = `${window.location.protocol}//${host}${port}`;
+                        } else {
+                            // Absolute last resort - this might still fail on mobile if it's localhost
+                            baseUrl = `http://127.0.0.1${port}`; 
+                        }
+                    }
+
+                    console.log("QR Base URL:", baseUrl);
+
+                    fetch('get_session_info.php')
+                        .then(r => r.json())
+                        .then(data => {
+                            const targetUrl = `${baseUrl}/Zoopedia-main/qr_bridge.php?sid=${data.sid}`;
+                            qrContainer.innerHTML = "";
+                            new QRCode(qrContainer, {
+                                text: targetUrl,
+                                width: 110,
+                                height: 110,
+                                colorDark : "#000000",
+                                colorLight : "#ffffff",
+                                correctLevel : QRCode.CorrectLevel.M
+                            });
+                        });
+                };
+                generateQR();
+            }
+            // Start polling for scan status from mobile
+            startScanPolling();
+        });
+
+        function startScanPolling() {
+            // Check for scan signals from the server
+            setInterval(() => {
+                fetch('member4_qr_api.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'scanned') {
+                            showScanPopup();
+                        }
+                    })
+                    .catch(err => console.log('Waiting for scan...'));
+            }, 2000); // Poll every 2 seconds
+        }
+
+        function showScanPopup() {
+            const popup = document.getElementById('scan-detected-popup');
+            if (popup) popup.classList.add('active');
+        }
+
+        function handleScanSuccess(open) {
+            const popup = document.getElementById('scan-detected-popup');
+            if (open) {
+                // Open the global gallery using the current host
+                const globalUrl = window.location.origin + '/ZoopediaGlobal/index.html';
+                window.open(globalUrl, '_blank');
+            }
+            if (popup) popup.classList.remove('active');
+        }
+
+        // Zoopedia-style Scroll Reveal Logic
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, { threshold: 0.1 }); // Lower threshold for better reliability
+
+        revealElements.forEach(el => revealObserver.observe(el));
+        
+        // Initial trigger to catch elements already in view
+        setTimeout(() => {
+            revealElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.classList.add('revealed');
+                }
+            });
+        }, 100);
+    </script>
+</body>
+</html>

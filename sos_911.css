@@ -1,0 +1,103 @@
+:root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --accent-red: #ff3b30;
+    --accent-green: #34c759;
+    --accent-yellow: #ffd60a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; width: 100vw; height: 100vh; }
+.app-container { width: 100%; height: 100%; position: relative; }
+
+.view {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: opacity 1s; opacity: 1; z-index: 10;
+}
+.hidden-view { opacity: 0 !important; pointer-events: none !important; }
+
+/* Header */
+.header { position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 30px 40px; z-index: 1000; align-items: center;}
+.header-center { position: absolute; left: 50%; transform: translateX(-50%); }
+.header-center h1 { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.5px; color: #fff; }
+.header-left span { font-size: 1.1rem; font-weight: 500; }
+
+.header-actions { display: flex; gap: 10px; }
+.start-btn, .end-btn { padding: 8px 18px; border-radius: 20px; border: none; font-weight: 600; cursor: pointer; color: #fff; font-size: 0.75rem;}
+.start-btn { background: #34c759; }
+.end-btn { background: #ff3b30; }
+.btn-locked { opacity: 0.3; }
+
+/* Radar Refined */
+.radar-viewport { width: 340px; height: 340px; position: relative; margin-top: -40px; }
+.radar-container { width: 100%; height: 100%; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; position: relative; }
+.radar-container::before, .radar-container::after {
+    content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    border-radius: 50%; border: 1px solid rgba(255,255,255,0.05);
+}
+.radar-container::before { width: 66%; height: 66%; }
+.radar-container::after { width: 33%; height: 33%; }
+
+.radar-sweep { position: absolute; width: 50%; height: 2px; background: linear-gradient(90deg, transparent, rgba(52, 199, 89, 0.4)); top: 50%; left: 50%; transform-origin: left; animation: sweep 4s linear infinite; }
+@keyframes sweep { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+.radar-lock-cone { position: absolute; width: 280px; height: 280px; background: rgba(52,199,89,0.15); clip-path: polygon(50% 50%, 25% 0%, 75% 0%); opacity: 0; top: 50%; left: 50%; transform: translate(-50%, -100%); transition: opacity 1s; }
+.radar-lock-dot { position: absolute; width: 22px; height: 22px; background: #fff; border-radius: 50%; top: 22%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 1s, background 1s; box-shadow: 0 0 20px #fff; }
+
+.radar-active .radar-lock-cone, .radar-active .radar-lock-dot { opacity: 1; }
+
+.status-text { text-align: center; margin-top: 40px; padding: 0 40px; }
+.connecting { color: #888; font-weight: 700; letter-spacing: 2.5px; font-size: 0.85rem; display: block; margin-bottom: 8px; }
+.instruction { font-size: 1.8rem; font-weight: 700; color: #fff; line-height: 1.2; }
+
+/* Action Pills (Reference Match) */
+.searching-actions { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.pill-outline {
+    background: #000; border: 1px solid rgba(255,255,255,0.2); 
+    padding: 12px 25px; border-radius: 25px; 
+    display: flex; align-items: center; gap: 12px; cursor: pointer;
+    min-width: 240px; font-size: 0.95rem; font-weight: 600;
+}
+.pill-outline i { font-style: normal; font-size: 1.1rem; }
+.pill-outline.btn-yellow { color: var(--accent-yellow); border-color: rgba(255, 214, 10, 0.3); }
+.pill-outline.btn-green { color: var(--accent-green); border-color: rgba(52, 199, 89, 0.3); }
+
+/* Video View */
+.full-screen-video { width: 100vw; height: 100vh; object-fit: cover; }
+.cinematic-text-overlay { position: absolute; bottom: 80px; width: 100%; text-align: center; z-index: 5100; }
+.cinematic-text-overlay h2 { font-size: 2.2rem; font-weight: 800; letter-spacing: 6px; color: #fff; text-shadow: 0 0 20px #000; }
+
+/* Dashboard Styles */
+.tower-bg-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('img/tower_bg.png') no-repeat center center; background-size: cover; z-index: 10; opacity: 0.7; }
+.transparent-bg { background: transparent !important; z-index: 6000; }
+.tower-content, .satellite-content { position: relative; z-index: 100; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; padding: 100px 60px; }
+
+.online-headline { margin-top: 50px; }
+.headline-small { font-size: 3.5rem; font-weight: 800; line-height: 1.1; color: #fff; }
+.headline-large { font-size: 6.5rem; font-weight: 900; color: var(--accent-green); line-height: 1; letter-spacing: -3px; }
+
+/* Reference Match Text */
+.headline-mixed {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -2px;
+}
+.text-green { color: var(--accent-green); }
+
+.tower-messaging-footer { position: absolute; bottom: 50px; display: flex; flex-direction: column; gap: 12px; }
+
+.action-pill-btn { background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(10px); border: none; padding: 14px 40px; border-radius: 35px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 15px; cursor: pointer; min-width: 280px; }
+.btn-yellow { color: var(--accent-yellow); }
+.btn-green { color: var(--accent-green); }
+.btn-red { color: #ff3b30; }
+
+/* Emergency Elements */
+.emergency-call-btn { background: #ff3b30; color: #fff; border: none; padding: 20px 60px; border-radius: 40px; font-size: 1.5rem; font-weight: 800; margin-top: 20px; cursor: pointer; display: flex; gap: 15px; align-items: center;}
+
+/* Modals */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(30px); display: none; align-items: center; justify-content: center; z-index: 10000; }
+.modal-content { background: rgba(30,30,32,0.8); padding: 40px; border-radius: 35px; width: 90%; max-width: 480px; border: 1px solid rgba(255,255,255,0.1); }
+.send-btn { width: 100%; padding: 18px; border-radius: 30px; border: none; background: #fff; color: #000; font-weight: 700; cursor: pointer; }

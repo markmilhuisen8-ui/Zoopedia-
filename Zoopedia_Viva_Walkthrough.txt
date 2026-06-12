@@ -1,0 +1,137 @@
+=========================================================
+ZOOPEDIA VIVA PRESENTATION: LINE-BY-LINE EXPLANATION
+=========================================================
+
+This guide contains the EXACT line-by-line explanation for each 
+member's backend PHP file. Use this during the Viva presentation when 
+the examiner asks you to explain your code.
+
+Keep this file open and point the examiner to the specific lines as you speak.
+
+
+---------------------------------------------------------
+MEMBER 1: RESEARCH HUB (JSON Database)
+File: `member1_research_api.php`
+---------------------------------------------------------
+Line 4:  `header('Content-Type: application/json');` 
+   -> "I set the response header so the browser knows we are returning JSON data."
+
+Line 6:  `$file = 'research_papers.json';`
+   -> "I define the text file where my >5 key/value pair records are physically stored."
+
+Line 7:  `$records = file_exists($file) ? json_decode(file_get_contents($file), true) : [];`
+   -> "This satisfies the JSON parsing criteria. I read the file and decode the JSON string into a PHP array."
+
+Line 8:  `$method = $_SERVER['REQUEST_METHOD'];`
+   -> "I check if the frontend is doing a GET (read) or POST (create) request."
+
+Lines 11-13: `if (isset($_GET['id'])) { ... $found = array_filter(...)`
+   -> "If the user wants a specific record, I filter the array to find the exact ID."
+
+Line 19: `$input = json_decode(file_get_contents('php://input'), true);`
+   -> "When a new note is created, I capture the raw POST data from the frontend and decode it."
+
+Lines 21-23: `$input['id'] = ... max(array_column($records, 'id')) + 1 : 1;`
+   -> "I automatically generate the next highest ID, set the current date, and calculate the word count automatically."
+
+Line 25: `file_put_contents($file, json_encode($records, JSON_PRETTY_PRINT));`
+   -> "Finally, I turn the array back into a JSON string and overwrite the storage file."
+
+
+---------------------------------------------------------
+MEMBER 2: CLOUD DIGITAL LIBRARY (MySQL Grid)
+File: `member2_library_api.php`
+---------------------------------------------------------
+Line 6:  `session_start();`
+   -> "I start the session so I can link library items securely to the logged-in user."
+
+Lines 11-12: `$pdo = new PDO("mysql:host=localhost;dbname=zoopedia", "root", "");`
+   -> "I create a secure PDO connection to the MySQL database."
+
+Lines 15-18: `$pdo->exec("CREATE TABLE IF NOT EXISTS digital_library (...)");`
+   -> "I automatically create the database table if it doesn't exist to prevent crashes."
+
+Line 22: `$stmt = $pdo->prepare("SELECT * FROM digital_library WHERE user_id = ? ORDER BY id DESC");`
+   -> "To prevent SQL injection, I use a prepared statement to fetch all assets belonging strictly to this user."
+
+Line 24: `echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));`
+   -> "I fetch all the rows as an associative array and immediately return them as JSON to build the grid."
+
+Line 26: `$stmt = $pdo->prepare("DELETE FROM digital_library WHERE id = ? AND user_id = ?");`
+   -> "If the user clicks delete, I ensure both the item ID and their User ID match before deleting."
+
+
+---------------------------------------------------------
+MEMBER 3: MOTHER'S DAY CARD (Physical File Upload)
+File: `member3_mother_api.php`
+---------------------------------------------------------
+Line 13: `$uploadDir = 'library_uploads/';`
+   -> "I define a secure server directory where the canvas image blobs will be saved."
+
+Lines 21-22: `if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {`
+   -> "I check if a physical file was uploaded via the Canvas AJAX Blob without errors."
+
+Line 23: `move_uploaded_file($_FILES['file']['tmp_name'], $url);`
+   -> "I move the temporary uploaded file from the server's cache into my permanent library_uploads directory."
+
+Line 29: `$stmt = $pdo->prepare("INSERT INTO digital_library (user_id, title, type, url, category, date) VALUES (?, ?, ?, ?, ?, ?)");`
+   -> "Once the physical image is saved, I insert a record pointing to that image's URL into the database."
+
+
+---------------------------------------------------------
+MEMBER 4: QR CODE MAGIC HAND-OFF (Async Polling)
+File: `member4_qr_api.php`
+---------------------------------------------------------
+Line 6:  `session_start();`
+   -> "We need the session because the desktop and mobile devices sync via the same Session ID."
+
+Line 11: `$sid = $_GET['token'] ?? session_id();`
+   -> "The desktop UI repeatedly passes its session token here via AJAX polling."
+
+Lines 14-15: `$signals = json_decode(file_get_contents($signalFile), true) ?: [];`
+   -> "I check the central JSON signal file to see if the mobile phone has written a 'scanned' flag yet."
+
+Line 16: `if (!empty($signals[$sid]['scanned'])) {`
+   -> "If the mobile phone successfully scanned the QR code, the flag will be true."
+
+Line 18: `unset($signals[$sid]); file_put_contents(...)`
+   -> "I immediately delete the signal so the hand-off prompt doesn't trigger twice, then return 'scanned: true'."
+
+
+---------------------------------------------------------
+MEMBER 5: DYNAMIC SOS (Geolocation API)
+File: `member5_sos_api.php`
+---------------------------------------------------------
+Line 6:  `$data = json_decode(file_get_contents('php://input'), true);`
+   -> "The browser's Geolocation API sends the raw latitude and longitude JSON payload, which I decode here."
+
+Line 13: `$logs = file_exists($logFile) ? (json_decode(file_get_contents($logFile), true) ?: []) : [];`
+   -> "I open the master SOS log file, read the past emergencies, and convert them to an array."
+
+Line 14: `$logs[] = $data;`
+   -> "I instantly append the new emergency GPS coordinates to the log list."
+
+Line 16: `if (file_put_contents($logFile, json_encode($logs, JSON_PRETTY_PRINT))) {`
+   -> "I convert the array back to JSON format and write it to the file. If successful, the frontend receives a success toast."
+
+
+---------------------------------------------------------
+MEMBER 6: TAP TO PAY (Secure Asynchronous Transactions)
+File: `member6_wallet_api.php`
+---------------------------------------------------------
+Lines 23-26: `foreach ($cards as &$card) { $card['masked_number'] = "**** **** **** " . substr($card['card_number'], -4); }`
+   -> "For security reasons, before I send the wallet data back to the frontend, I loop through and mask all credit card digits except the last 4."
+
+Line 32: `if (empty($data['number']) || empty($data['holder'])) {`
+   -> "I perform server-side validation to ensure no blank credit cards are inserted."
+
+Line 37: `$type = (strpos($data['number'], '5') === 0) ? 'Mastercard' : ((strpos($data['number'], '3') === 0) ? 'Amex' : 'Visa');`
+   -> "This logic looks at the first digit of the credit card. If it starts with 5 it's a Mastercard, 3 is Amex, otherwise Visa."
+
+Line 40: `$stmt->execute([$userId, $data['holder'], $data['number'], $data['expiry'] ?? '', $type]);`
+   -> "Finally, I insert the secure card details directly into the database so the user doesn't have to reload the checkout page."
+
+
+=========================================================
+END OF WALKTHROUGH
+=========================================================

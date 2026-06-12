@@ -1,0 +1,13 @@
+[
+    {
+        "to": "markmilhuiseneditz@gmail.com",
+        "message": "help",
+        "method": "GMAIL",
+        "status": "EMAIL_SIMULATED_LOGGED"
+    },
+    {
+        "to": "markmilhuiseneditz@gmail.com",
+        "message": "help plz",
+        "status": "EMAIL_SIMULATED_LOGGED"
+    }
+]

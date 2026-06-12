@@ -1,0 +1,20 @@
+{
+  "name": "Emergency SOS Radar",
+  "short_name": "SOS Radar",
+  "start_url": "sos_radar.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ff3b30",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/591/591572.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/591/591572.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

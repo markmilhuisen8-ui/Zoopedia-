@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoopedia | Memory Card Workspace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            background: radial-gradient(circle at 50% 0%, #1c1c1e, #000000);
+            color: #f5f5f7;
+            font-family: 'Inter', -apple-system, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workspace-container {
+            width: 100%;
+            max-width: 1920px;
+            height: 1080px;
+            max-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .editor-sidebar {
+            width: 420px;
+            background: rgba(20, 20, 22, 0.7);
+            backdrop-filter: blur(25px);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+            height: 100%;
+            overflow-y: auto;
+        }
+        /* Hide scrollbar for a cleaner look */
+        .editor-sidebar::-webkit-scrollbar { width: 6px; }
+        .editor-sidebar::-webkit-scrollbar-track { background: transparent; }
+        .editor-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+        .sidebar-header h2 { font-size: 24px; font-weight: 700; }
+        .control-group label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #86868b; margin-bottom: 6px; }
+        
+        .zoopedia-input {
+            width: 100%; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+            padding: 10px 14px; color: white; transition: all 0.3s;
+        }
+        .zoopedia-input:focus { border-color: #0071e3; outline: none; }
+
+        .color-picker-wrapper-mini {
+            width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.2); overflow: hidden; position: relative;
+        }
+        .color-picker-wrapper-mini input[type="color"] {
+            position: absolute; top: -5px; left: -5px; width: 50px; height: 50px; cursor: pointer; border: none; padding: 0;
+        }
+
+        /* Fix for Dropdown visibility */
+        select.zoopedia-input option { background-color: #1c1c1e; color: #ffffff; }
+
+        .zoopedia-upload-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px;
+            padding: 24px; text-align: center; cursor: pointer; transition: 0.3s;
+            color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.02);
+            font-size: 13px; margin-bottom: 10px;
+        }
+        .zoopedia-upload-box:hover { border-color: #0071e3; color: white; background: rgba(255,255,255,0.05); }
+        .zoopedia-upload-box i { margin-bottom: 8px; width: 28px; height: 28px; }
+
+        .emoji-picker { display: flex; gap: 8px; flex-wrap: wrap; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; }
+        .emoji-option { font-size: 24px; cursor: grab; padding: 5px; border-radius: 8px; transition: 0.2s; border: 2px solid transparent; }
+        .emoji-option:hover { transform: scale(1.2); }
+        .emoji-option:active { cursor: grabbing; }
+
+        .placed-emoji { position: absolute; font-size: 40px; cursor: move; user-select: none; z-index: 50; }        
+        .remove-emoji { 
+            position: absolute; top: -5px; right: -5px; background: #ff3b30; color: white; 
+            width: 18px; height: 18px; border-radius: 50%; font-size: 12px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            opacity: 0; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .placed-emoji:hover .remove-emoji { opacity: 1; }
+
+        /* Custom Sliders */
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+        }
+        .custom-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        /* Gradients */
+        .color-palette { display: flex; gap: 10px; flex-wrap: wrap; }
+        .color-circle {
+            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent; transition: transform 0.2s;
+            background-size: cover; background-position: center;
+        }
+        .color-circle:hover { transform: scale(1.1); }
+        .color-circle.active { border-color: #fff; transform: scale(1.1); box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+        /* Preset Images */
+        .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .preset-img {
+            width: 100%; aspect-ratio: 1; border-radius: 8px; object-fit: cover;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        }
+        .preset-img:hover { border-color: rgba(255,255,255,0.5); }
+        .preset-img.active { border-color: #0071e3; }
+
+        /* Buttons */
+        .btn-primary-zoopedia {
+            background: #f5f5f7; color: #1d1d1f; border: none; border-radius: 12px;
+            padding: 14px; font-weight: 600; width: 100%; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+
+        /* Poster Area */
+        .poster-stage {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+        }
+        .poster-canvas {
+            width: 1080px; height: 1080px;
+            background: radial-gradient(circle at center, #2a2a2d, #141415);
+            border-radius: 40px; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            display: flex; align-items: center; justify-content: center;
+            transform: scale(0.8);
+        }
+
+        /* The Card */
+        .memory-card {
+            width: 650px; padding: 40px; border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            display: block; /* Using block for better capture compatibility */
+            transition: color 0.5s ease;
+            background-size: cover;
+            background-position: center;
+            position: relative; 
+            margin-top: 60px;
+        }
+
+        .card-header-text { margin-bottom: 25px; }
+
+        .card-header-text h3 { 
+            font-size: 36px; font-weight: 800; color: inherit; margin: 0; 
+            word-wrap: break-word; overflow-wrap: break-word; line-height: 1.3;
+            letter-spacing: normal;
+            transition: color 0.3s;
+        }
+        .card-header-text p { 
+            font-size: 18px; color: inherit; opacity: 0.8; margin: 8px 0 0 0; 
+            word-wrap: break-word; overflow-wrap: break-word; line-height: 1.4;
+            letter-spacing: normal;
+            transition: color 0.3s;
+        }
+
+        .card-image-single {
+            width: 100%; aspect-ratio: 1; border-radius: 16px;
+            background-color: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            background-size: cover;
+            background-position: 50% 50%;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .card-image-single:active { cursor: grabbing; }
+
+        .upload-icon-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: inherit;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+        .card-image-single:hover .upload-icon-box { opacity: 1; }
+        
+        /* Hide upload box if card has background image */
+        .card-image-single.has-image .upload-icon-box {
+            display: none;
+        }
+
+        .drag-hint {
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.6); padding: 5px 12px; border-radius: 20px;
+            font-size: 12px; pointer-events: none; opacity: 0; transition: 0.3s;
+        }
+        .card-image-single:hover .drag-hint { opacity: 1; }
+
+        .card-quote { 
+            font-size: 20px; font-style: italic; color: inherit; opacity: 0.9; 
+            text-align: center; margin-top: 0; font-family: inherit; 
+            word-wrap: break-word; overflow-wrap: break-word; line-height: 1.6;
+            letter-spacing: 0px;
+            text-rendering: optimizeLegibility;
+            font-variant-ligatures: none;
+            transition: color 0.3s;
+        }
+    </style>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid workspace-container p-0">
+        <!-- Sidebar -->
+        <div class="editor-sidebar">
+            <div class="sidebar-header">
+                <h2>Card Editor</h2>
+            </div>
+
+            <div class="control-group">
+                <label>Title</label>
+                <input type="text" id="liveTitle" class="zoopedia-input" placeholder="Enter Name or Title">
+            </div>
+            <div class="control-group">
+                <label>Tagline</label>
+                <input type="text" id="liveTagline" class="zoopedia-input" placeholder="Short description...">
+            </div>
+            <div class="control-group">
+                <label>Quote</label>
+                <input type="text" id="liveQuote" class="zoopedia-input" placeholder="A meaningful quote or memory...">
+            </div>
+
+            <div class="control-group">
+                <label>Typography Settings</label>
+                
+                <!-- Individual Font & Color Selectors -->
+                <div class="d-flex flex-column gap-2 mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="font-size: 10px; color:#86868b; width: 45px;">TITLE</span>
+                        <select class="zoopedia-input font-select flex-fill" data-target="#cardTitle" style="padding: 8px;">
+                            <option value="inherit">Default Font</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', Courier, monospace">Courier New</option>
+                            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                        </select>
+                        <div class="color-picker-wrapper-mini" title="Title Color">
+                            <input type="color" class="font-color-picker" data-target="#cardTitle" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="font-size: 10px; color:#86868b; width: 45px;">TAGLINE</span>
+                        <select class="zoopedia-input font-select flex-fill" data-target="#cardTagline" style="padding: 8px;">
+                            <option value="inherit">Default Font</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', Courier, monospace">Courier New</option>
+                            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                        </select>
+                        <div class="color-picker-wrapper-mini" title="Tagline Color">
+                            <input type="color" class="font-color-picker" data-target="#cardTagline" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span style="font-size: 10px; color:#86868b; width: 45px;">QUOTE</span>
+                        <select class="zoopedia-input font-select flex-fill" data-target="#cardQuote" style="padding: 8px;">
+                            <option value="inherit">Default Font</option>
+                            <option value="Georgia, serif">Georgia</option>
+                            <option value="'Courier New', Courier, monospace">Courier New</option>
+                            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                        </select>
+                        <div class="color-picker-wrapper-mini" title="Quote Color">
+                            <input type="color" class="font-color-picker" data-target="#cardQuote" value="#ffffff">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Font Upload -->
+                <label class="zoopedia-upload-box" for="customFontUpload" style="padding: 10px; font-size: 11px; margin-bottom: 15px;">
+                    <i data-lucide="type" style="width: 20px; height: 20px;"></i>
+                    <span style="font-weight: 500;">Upload Custom Font (.ttf, .otf)</span>
+                    <input type="file" id="customFontUpload" accept=".ttf,.otf" style="display:none;">
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>Title Alignment</label>
+                <div class="d-flex gap-2 mb-2">
+                    <div class="zoopedia-input text-center align-btn active" data-align="left" style="cursor: pointer; width: 50%; border-color: #0071e3;">Left</div>
+                    <div class="zoopedia-input text-center align-btn" data-align="center" style="cursor: pointer; width: 50%;">Center</div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Card Background Gradient</label>
+                <div class="color-palette">
+                    <div class="color-circle grad-img active" data-src="img/gred/OIP (2).webp" style="background-image: url('img/gred/OIP%20(2).webp');"></div>
+                    <div class="color-circle grad-img" data-src="img/gred/OIP (3).webp" style="background-image: url('img/gred/OIP%20(3).webp');"></div>
+                    <div class="color-circle grad-img" data-src="img/gred/OIP (4).webp" style="background-image: url('img/gred/OIP%20(4).webp');"></div>
+                    <div class="color-circle grad-img" data-src="img/gred/OIP (5).webp" style="background-image: url('img/gred/OIP%20(5).webp');"></div>
+                    <div class="color-circle grad-img" data-src="img/gred/R.png" style="background-image: url('img/gred/R.png');"></div>
+                    <div class="color-circle grad-img" data-src="img/gred/gray-gradient-background-l63d92e4zrvl6f6d.jpg" style="background-image: url('img/gred/gray-gradient-background-l63d92e4zrvl6f6d.jpg');"></div>
+                    <div class="color-circle grad-img" data-src="img/gred/360_F_764814583_Btyzgz0En8B76BZlL43JN3EyHbk3evdc.jpg" style="background-image: url('img/gred/360_F_764814583_Btyzgz0En8B76BZlL43JN3EyHbk3evdc.jpg');"></div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Upload Canvas Image</label>
+                <label class="zoopedia-upload-box" for="imageUpload">
+                    <i data-lucide="upload-cloud"></i>
+                    <span style="font-weight: 500;">Click or Drag to Upload</span>
+                    <span style="font-size: 11px; opacity: 0.6;">Fits to 1080x1080 Canvas</span>
+                    <input type="file" id="imageUpload" accept="image/*" style="display:none;">
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>Emoji Stamper (Drag & Drop onto Canvas)</label>
+                <div class="emoji-picker">
+                    <span class="emoji-option" draggable="true">❤️</span>
+                    <span class="emoji-option" draggable="true">🌟</span>
+                    <span class="emoji-option" draggable="true">🔥</span>
+                    <span class="emoji-option" draggable="true">🐾</span>
+                    <span class="emoji-option" draggable="true">✨</span>
+                    <span class="emoji-option" draggable="true">🐯</span>
+                    <span class="emoji-option" draggable="true">🌿</span>
+                    <span class="emoji-option" draggable="true">🌊</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Or Use Pre-provided Image</label>
+                <div class="preset-grid">
+                    <img src="img/elements/mem preset/3.jpeg" class="preset-img active" data-src="img/elements/mem preset/3.jpeg">
+                    <img src="img/elements/mem preset/2.jpeg" class="preset-img" data-src="img/elements/mem preset/2.jpeg">
+                    <img src="img/elements/mem preset/1.jpeg" class="preset-img" data-src="img/elements/mem preset/1.jpeg">
+                </div>
+            </div>
+
+            <div class="control-group" style="margin-top: auto;">
+                <label>Export & Share</label>
+                <div class="d-flex flex-column gap-2">
+                    <button id="downloadImageBtn" class="btn-primary-zoopedia" style="font-size: 14px; padding: 12px; background: #0071e3; color: white;">
+                        <i data-lucide="download"></i> Download as Image
+                    </button>
+                    
+                    <input type="email" id="userEmailInput" class="zoopedia-input mt-2" placeholder="user@example.com (For Email link)">
+                    <div class="d-flex gap-2">
+                        <button id="emailDesignBtn" class="btn-primary-zoopedia flex-fill" style="font-size: 14px; padding: 10px;">
+                            <i data-lucide="mail"></i> Email
+                        </button>
+                        <button id="whatsappShareBtn" class="btn-primary-zoopedia flex-fill" style="font-size: 14px; padding: 10px; background-color: #25D366; color: white;">
+                            <i data-lucide="message-circle"></i> WhatsApp
+                        </button>
+                    </div>
+                    
+                    <button id="copyShareLinkBtn" class="btn-primary-zoopedia mt-2" style="font-size: 14px; padding: 10px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.1);">
+                        <i data-lucide="copy"></i> Copy Share Link
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas -->
+        <div class="poster-stage">
+            <div class="poster-canvas" id="mainPoster">
+                <div class="memory-card" id="memoryCard" style="background-image: url('img/gred/OIP%20(2).webp');">
+                    <div class="card-header-text">
+                        <h3 id="cardTitle">New Memory</h3>
+                        <p id="cardTagline">Add a special tagline</p>
+                    </div>
+                    
+                    <div class="card-image-single" id="mainImageContainer" onclick="$('#imageUpload').click()">
+                        <div class="upload-icon-box">
+                            <i data-lucide="plus-circle" style="width: 48px; height: 48px;"></i>
+                            <span style="font-size: 14px; font-weight: 500;">Add Photo</span>
+                        </div>
+                        <div class="drag-hint">Drag to reposition</div>
+                    </div>
+                    
+                    <div class="card-quote" id="cardQuote">
+                        "Add a meaningful quote here"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            lucide.createIcons();
+            
+            let currentDesignId = null;
+            let currentGrad = 'img/gred/OIP (2).webp';
+            let currentImageSrc = '';
+            let bgPosX = 50, bgPosY = 50;
+
+            function updateImageTransform() {
+                $('#mainImageContainer').css({
+                    'background-position': `${bgPosX}% ${bgPosY}%`
+                });
+            }
+
+            // Live Text
+            $('#liveTitle').on('input', function() { $('#cardTitle').text($(this).val() || 'Untitled'); });
+            $('#liveTagline').on('input', function() { $('#cardTagline').text($(this).val()); });
+            $('#liveQuote').on('input', function() { $('#cardQuote').text('"' + $(this).val() + '"'); });
+
+            // Title Alignment
+            $('.align-btn').click(function() {
+                $('.align-btn').removeClass('active').css('border-color', 'rgba(255,255,255,0.1)');
+                $(this).addClass('active').css('border-color', '#0071e3');
+                $('.card-header-text').css('text-align', $(this).data('align'));
+            });
+
+            // Font Settings (Separate)
+            $('.font-select').change(function() {
+                const target = $(this).data('target');
+                $(target).css('font-family', $(this).val());
+            });
+
+            // Custom Font Upload
+            $('#customFontUpload').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const fontName = 'UserFont_' + Date.now();
+                        const fontDataUrl = event.target.result;
+                        const newStyle = document.createElement('style');
+                        newStyle.appendChild(document.createTextNode(`
+                            @font-face {
+                                font-family: '${fontName}';
+                                src: url('${fontDataUrl}');
+                            }
+                        `));
+                        document.head.appendChild(newStyle);
+                        
+                        $('.font-select').append(`<option value="${fontName}">Uploaded Font</option>`);
+                        alert("Custom font uploaded! Select 'Uploaded Font' from the dropdowns.");
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Text Color Selectors
+            $('.font-color-picker').on('input', function() {
+                const target = $(this).data('target');
+                $(target).css('color', $(this).val());
+            });
+
+            // Gradient selection (Image-based)
+            $('.grad-img').click(function() {
+                $('.grad-img').removeClass('active');
+                $(this).addClass('active');
+                currentGrad = $(this).data('src');
+                $('#memoryCard').css('background-image', `url('${currentGrad}')`);
+            });
+
+            // Preset image selection
+            $('.preset-img').click(function() {
+                $('.preset-img').removeClass('active');
+                $(this).addClass('active');
+                currentImageSrc = $(this).data('src');
+                $('#mainImageContainer').css('background-image', `url('${currentImageSrc}')`).addClass('has-image');
+                bgPosX = 50; bgPosY = 50;
+                updateImageTransform();
+            });
+
+            // Main Image Upload Handler
+            $('#imageUpload').change(function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        currentImageSrc = event.target.result;
+                        $('#mainImageContainer').css('background-image', `url('${currentImageSrc}')`).addClass('has-image');
+                        $('.preset-img').removeClass('active');
+                        bgPosX = 50; bgPosY = 50;
+                        updateImageTransform();
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Image Repositioning (Drag syncs with sliders)
+            let isDragging = false;
+            let startX, startY;
+
+            $('#mainImageContainer').on('mousedown', function(e) {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            $(document).on('mousemove', function(e) {
+                if(!isDragging) return;
+                let dx = e.clientX - startX;
+                let dy = e.clientY - startY;
+                
+                // Adjust position visually
+                bgPosX += (dx * 0.2); 
+                bgPosY += (dy * 0.2);
+                
+                if(bgPosX < 0) bgPosX = 0; if(bgPosX > 100) bgPosX = 100;
+                if(bgPosY < 0) bgPosY = 0; if(bgPosY > 100) bgPosY = 100;
+
+                updateImageTransform();
+                
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            $(document).on('mouseup', function() { isDragging = false; });
+
+            // Emoji Drag and Drop Logic
+            $('.emoji-option').on('dragstart', function(e) {
+                e.originalEvent.dataTransfer.setData('text/plain', $(this).text());
+            });
+
+            $('#memoryCard').on('dragover', function(e) {
+                e.preventDefault();
+            });
+
+            $('#memoryCard').on('drop', function(e) {
+                e.preventDefault();
+                const emojiText = e.originalEvent.dataTransfer.getData('text/plain');
+                if (!emojiText) return;
+
+                let offset = $(this).offset();
+                let x = e.pageX - offset.left;
+                let y = e.pageY - offset.top;
+
+                let $emoji = $(`
+                    <div class="placed-emoji">
+                        ${emojiText}
+                        <div class="remove-emoji">×</div>
+                    </div>
+                `);
+                
+                $emoji.css({ left: x - 20, top: y - 20 }); 
+                $(this).append($emoji);
+                
+                makeEmojiDraggable($emoji);
+            });
+
+            // Remove Emoji
+            $(document).on('click', '.remove-emoji', function(e) {
+                $(this).parent().remove();
+                e.stopPropagation();
+            });
+
+            let activeEmojiEl = null;
+            let emojiOffsetX, emojiOffsetY;
+
+            function makeEmojiDraggable($el) {
+                $el.on('mousedown', function(e) {
+                    if($(e.target).hasClass('remove-emoji')) return;
+                    activeEmojiEl = $(this);
+                    emojiOffsetX = e.offsetX;
+                    emojiOffsetY = e.offsetY;
+                    e.stopPropagation();
+                });
+            }
+
+            $(document).on('mousemove', function(e) {
+                if (!activeEmojiEl) return;
+                let cardOffset = $('#memoryCard').offset();
+                let x = e.pageX - cardOffset.left - emojiOffsetX;
+                let y = e.pageY - cardOffset.top - emojiOffsetY;
+                activeEmojiEl.css({ left: x, top: y });
+            });
+
+            $(document).on('mouseup', function() {
+                activeEmojiEl = null;
+            });
+
+            // Universal Image Capture Function
+            function captureCardImage(callback) {
+                $('.drag-hint').hide();
+                $('.remove-emoji').hide();
+                
+                const element = document.querySelector("#memoryCard");
+                const oldScrollX = window.scrollX;
+                const oldScrollY = window.scrollY;
+                
+                // Ensure page is at 0,0 for coordinate accuracy
+                window.scrollTo(0, 0);
+
+                document.fonts.ready.then(() => {
+                    html2canvas(element, {
+                        useCORS: true,
+                        allowTaint: true,
+                        scale: 3, 
+                        backgroundColor: null,
+                        logging: false,
+                        onclone: (clonedDoc) => {
+                            const clonedCard = clonedDoc.querySelector("#memoryCard");
+                            if (clonedCard) {
+                                // Force parent to reset transform so it doesn't affect the card's coordinates
+                                if (clonedCard.parentElement) {
+                                    clonedCard.parentElement.style.transform = "none";
+                                    clonedCard.parentElement.style.width = "auto";
+                                    clonedCard.parentElement.style.height = "auto";
+                                    clonedCard.parentElement.style.display = "block";
+                                }
+                                clonedCard.style.transform = "none";
+                                clonedCard.style.position = "relative";
+                                clonedCard.style.margin = "0";
+                                clonedCard.style.letterSpacing = "normal";
+                            }
+                        }
+                    }).then(canvas => {
+                        window.scrollTo(oldScrollX, oldScrollY);
+                        $('.drag-hint').show();
+                        $('.remove-emoji').show();
+                        callback(canvas.toDataURL('image/png'));
+                    }).catch(err => {
+                        window.scrollTo(oldScrollX, oldScrollY);
+                        console.error("Capture Error:", err);
+                        $('.drag-hint').show();
+                        $('.remove-emoji').show();
+                        alert("Capture failed.");
+                        callback(null);
+                    });
+                });
+            }
+
+            // Finalize & Send Email (With Image)
+            // Finalize & Send Email (Save + Link)
+            $('#emailDesignBtn').click(function() {
+                const email = $('#userEmailInput').val();
+                if(!email) { alert("Please enter an email address."); return; }
+                const btn = $(this); const originalHtml = btn.html();
+                btn.html('<i data-lucide="loader"></i> Sending...').prop('disabled', true); lucide.createIcons();
+                captureCardImage(function(base64Image) {
+                    if(!base64Image) { btn.html(originalHtml).prop('disabled', false); lucide.createIcons(); return; }
+                    $.ajax({
+                        url: 'memory_service.php', type: 'POST',
+                        data: { action: 'save_and_email', user_email: email, card_image: base64Image, title: $('#liveTitle').val() },
+                        success: function(res) {
+                            btn.html(originalHtml).prop('disabled', false); lucide.createIcons();
+                            const data = typeof res === 'string' ? JSON.parse(res) : res;
+                            if(data.status === 'success') {
+                                if(data.local_email_link) { window.open(data.local_email_link, '_blank'); }
+                                alert("Success! Your card has been sent to " + email);
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Share via WhatsApp (Save + Link)
+            $('#whatsappShareBtn').click(function() {
+                const btn = $(this);
+                const originalHtml = btn.html();
+                const waWindow = window.open('', '_blank');
+                
+                btn.html('<i data-lucide="loader"></i> Processing...').prop('disabled', true);
+                lucide.createIcons();
+                
+                captureCardImage(function(base64Image) {
+                    if(!base64Image) {
+                        btn.html(originalHtml).prop('disabled', false);
+                        lucide.createIcons();
+                        waWindow.close();
+                        return;
+                    }
+
+                    // Save to backend first to get the ID
+                    $.ajax({
+                        url: 'memory_service.php',
+                        type: 'POST',
+                        data: {
+                            action: 'save_and_email',
+                            user_email: 'whatsapp@share.local',
+                            card_image: base64Image,
+                            title: $('#liveTitle').val()
+                        },
+                        success: function(res) {
+                            btn.html(originalHtml).prop('disabled', false);
+                            lucide.createIcons();
+                            const data = typeof res === 'string' ? JSON.parse(res) : res;
+
+                            if(data.status === 'success') {
+                                // 1. Download image
+                                const link = document.createElement('a');
+                                link.download = 'Zoopedia_Card.png';
+                                link.href = base64Image;
+                                link.click();
+                                
+                                // 2. Redirect to WhatsApp with the new LANDING PAGE link
+                                const shareUrl = "http://localhost/Zoopedia-main/share_card.php?id=" + data.design_id;
+                                const cardTitle = $('#liveTitle').val() || 'Wildlife Card';
+                                const waMessage = `Hey! I made this special memory card for you: *${cardTitle}*\n\nView it here: ${shareUrl}`;
+                                const waApiUrl = `https://wa.me/?text=${encodeURIComponent(waMessage)}`;
+                                waWindow.location.href = waApiUrl;
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Standard Download Button
+            $('#downloadImageBtn').click(function() {
+                const btn = $(this);
+                const originalHtml = btn.html();
+                btn.html('<i data-lucide="loader"></i> Creating...').prop('disabled', true);
+                lucide.createIcons();
+                
+                captureCardImage(function(base64Image) {
+                    btn.html(originalHtml).prop('disabled', false);
+                    lucide.createIcons();
+                    if(!base64Image) return;
+                    const link = document.createElement('a');
+                    link.download = 'Zoopedia_Memory_Card.png';
+                    link.href = base64Image;
+                    link.click();
+                });
+            });
+            // Direct Copy Share Link
+            $('#copyShareLinkBtn').click(function() {
+                const btn = $(this);
+                const originalHtml = btn.html();
+                btn.html('<i data-lucide="loader"></i> Saving...').prop('disabled', true);
+                lucide.createIcons();
+                
+                captureCardImage(function(base64Image) {
+                    if(!base64Image) { btn.html(originalHtml).prop('disabled', false); lucide.createIcons(); return; }
+                    
+                    $.ajax({
+                        url: 'memory_service.php',
+                        type: 'POST',
+                        data: {
+                            action: 'save_and_email',
+                            user_email: 'copy@link.local',
+                            card_image: base64Image,
+                            title: $('#liveTitle').val()
+                        },
+                        success: function(res) {
+                            btn.html(originalHtml).prop('disabled', false);
+                            lucide.createIcons();
+                            const data = typeof res === 'string' ? JSON.parse(res) : res;
+                            if(data.status === 'success') {
+                                const shareUrl = "http://localhost/Zoopedia-main/share_card.php?id=" + data.design_id;
+                                
+                                // Copy to clipboard
+                                navigator.clipboard.writeText(shareUrl).then(() => {
+                                    alert("Success! Link copied to clipboard:\n" + shareUrl + "\n\nOpening your special page now...");
+                                    window.open(shareUrl, '_blank');
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    
+</body>
+</html>

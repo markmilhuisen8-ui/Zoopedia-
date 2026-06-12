@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <link rel="stylesheet" href="mobileresponse.css">
+   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   <!-- Scripts moved to end -->
+   
+   
+   
+   
+   <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="zoopedia_feature.css">
+   <link rel="stylesheet" href="darkmode.css">
+   <link rel="stylesheet" href="auth.css">
+   <script src="https://accounts.google.com/gsi/client" async defer></script>
+   <script src="darkmode.js"></script>
+   <script src="auth.js"></script>
+    <title>Animal Details | Zoopedia Prime</title>
+    <!-- MediaPipe Hand Tracking Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="handtracking.js" defer></script>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+
+<body>
+
+    <div class="top-promo">Explore the all-new Zoopedia Archive. <a href="#">Learn more ></a></div>
+                <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+<!-- TextAnimalName -->
+<h1 class="Grids text-center">Red Panda</h1>
+
+<!-- Profile image -->
+<section class="animalprofile text-center">
+    <div class="profile-container">
+        <img src="img/animals/cam.jpeg" id="profile-img" class="profile-icon" alt="Animal Profile">
+    </div>
+</section>
+
+<!-- Animal Title & Description -->
+<div class="container">
+    <section class="details-section">
+        <h2 class="KeyCharacteristics">Species Overview</h2>
+        <p class="para">
+            The Red Panda, often described as a living fossil, is a master of the high-altitude 
+            forest canopy. Despite its name, it is more closely related to weasels and raccoons 
+            than to giant pandas. These solitary creatures spend most of their lives in trees, 
+            using their long, bushy tails for balance and as a wraparound blanket during 
+            chilly Himalayan nights. Their diet consists primarily of bamboo, though they 
+            are known to snack on fruits, acorns, and the occasional bird egg.
+        </p>
+    </section>
+</div>
+
+<section id="joinus" class="position-relative">
+    
+    <img src="img/banners/join team.png" class="img-fluid d-none d-md-block" alt="Desktop Banner">
+
+    <img src="img/banners/banner dreams for mob.jpg" class="img-fluid d-block d-md-none mobile-only-banner" alt="Mobile Banner">
+    
+    <a href="contact.html" class="btn custom-join-btn position-absolute">
+       JOIN THE WILD
+    </a>
+</section>
+
+<!-- Bootstrap Table  -->
+
+<div class="container mt-4 mb-5">
+    <div class="details-section">
+        <h2 class="KeyCharacteristics">Quick Facts</h2>
+        
+        <div class="table-responsive mt-3">
+            <table class="table table-dark table-striped table-hover border-success">
+                <thead>
+                    <tr>
+                        <th scope="col" style="color: #ffcc00; font-family: 'BebasNeuefont'; letter-spacing: 1px;">Attribute</th>
+                        <th scope="col" style="color: #ffcc00; font-family: 'BebasNeuefont'; letter-spacing: 1px;">Information</th>
+                    </tr>
+                </thead>
+                <tbody style="font-family: 'SFfontBold';">
+                    <tr>
+                        <td><strong>Scientific Name</strong></td>
+                        <td class="fst-italic">Rattus rattus</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Class</strong></td>
+                        <td>Mammalia</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Diet</strong></td>
+                        <td>Omnivore</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Life Span</strong></td>
+                        <td>10 to 13 years</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Conservation Status</strong></td>
+                        <td>
+                            <span class="badge bg-success">Stable</span> 
+                            Not Evaluated (domesticated species)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+
+  <section class="newsletter-banner">
+    <div class="container h-100">
+      <div class="row h-100 align-items-center">
+        
+        <div class="col-lg-12 newsletter-content-new reveal-on-scroll text-center">
+          <div class="newsletter-badge">Exclusive Subscription</div>
+          <h2 class="newsletter-title-new">The Wild Journal.</h2>
+          <p class="newsletter-text-new mx-auto">
+            Join thousands of researchers and nature lovers. Get the latest <span class="highlight-text">conservation breakthroughs</span> and stories delivered to your inbox.
+          </p>
+          
+          <form class="newsletter-form-new">
+            <div class="input-group-new mx-auto">
+              <input type="email" class="form-control newsletter-input-new" placeholder="Enter your email" aria-label="Email address">
+              <button class="btn btn-signup-new" type="submit">Subscribe</button>
+            </div>
+            <p class="newsletter-legal">By subscribing, you agree to our Privacy Policy.</p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+<div id="persistent-ai-container">
+    <div class="ai-controls-panel">
+        <div class="persona-switch-horizontal">
+            <span class="mini-label">Alex</span>
+            <label class="switch">
+                <input type="checkbox" id="persona-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="mini-label">Sussi</span>
+        </div>
+        <button id="ai-stop-btn" title="Stop AI"><i class="fa-solid fa-circle-stop"></i> STOP</button>
+    </div>
+
+    <div id="normad-container" class="idle">
+        <div class="orb"></div>
+    </div>
+
+    <div id="normad-caption-bar" style="display: none;"></div>
+</div>
+
+<!-- Footers -->
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+
+    <!-- Hand Tracking Infrastructure -->
+    <video class="input_video" style="display:none" playsinline></video>
+    <canvas class="output_canvas" style="display:none"></canvas>
+    <div id="hand-cursor" class="hand-cursor"></div>
+
+    <!-- Hand Tracking Permission Modal -->
+    <div id="hand-tracking-prompt" class="hand-prompt-overlay" style="display:none">
+      <div class="hand-prompt-card">
+          <div class="hand-prompt-icon"><i class="fas fa-hand-sparkles"></i></div>
+          <h3>Magic Hand Interaction</h3>
+          <p>Control Zoopedia Prime with your finger! Our AI tracks your movement in real-time. Video is processed locally and never saved.</p>
+          <div class="hand-prompt-actions">
+              <button id="btn-deny-hand" class="btn-deny">Not Now</button>
+              <button id="btn-agree-hand" class="btn-agree">Enable Magic</button>
+          </div>
+      </div>
+    </div>
+<script src="animaldb.js"></script>
+<script src="Samanthabrain.js"></script>
+<script src="Alexbrain.js"></script>
+<script src="NomadAi.js"></script>
+<script src="mediacontrols.js" defer></script>
+<script src="handtracking.js"></script>
+
+<script>
+$(document).ready(function() {
+    // 1. Get the ID from the URL (e.g., ?id=57)
+    const urlParams = new URLSearchParams(window.location.search);
+    const animalId = urlParams.get('id');
+
+    // 2. Find the animal in your local database
+    const animal = AnimalIndex.find(a => a.id == animalId);
+
+    if (animal) {
+        // 3. Update the Header and Profile Image
+        $('.Grids.text-center').text(animal.animalname);
+        $('#profile-img').attr('src', animal.image);
+
+        // 4. Update the Description Paragraph
+        $('.para').text(animal.KeyCharacteristics);
+
+        // 5. Update the "Quick Facts" Table
+        $('td:contains("Scientific Name")').length && $('td:contains("Scientific Name")').next('td').text(animal.ScientificName);
+        $('td:contains("Class")').length && $('td:contains("Class")').next('td').text(animal.Class);
+        $('td:contains("Diet")').length && $('td:contains("Diet")').next('td').text(animal.Diet);
+        $('td:contains("Life Span")').length && $('td:contains("Life Span")').next('td').text(animal.LifeSpan);
+        $('td:contains("Conservation Status")').length && $('td:contains("Conservation Status")').next('td').text(animal.Status);
+
+    } else {
+        // Fallback if the animal isn't found
+        $('.details-section').html('<h2 class="text-danger center-error">_ERROR: ANIMAL_NOT_FOUND (ID: '+animalId+')</h2>');
+    }
+});
+</script>
+</body>
+</html>
+

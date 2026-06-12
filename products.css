@@ -1,0 +1,666 @@
+/* Font Family imports */
+
+@font-face {
+  font-family: 'Zurambifont';
+  src: url('fonts/zurambi-font/Zurambi-m2Ea2.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'BebasNeuefont';
+  src: url('fonts/Bebas_Neue/BebasNeue-Regular.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Spancerfont';
+  src: url('fonts/spencer/Spencer.otf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SFfontBold';
+  src: url('fonts/sf-pro-display/SFPRODISPLAYBOLD.OTF') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SFfontNomal';
+  src: url('fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'wimpykid';
+  src: url('fonts/wimpykid/WimpyKid.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LionKing';
+  src: url('fonts/Lionking/lion_king.ttf') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+
+/* --- Zoopedia Products Page Styles --- */
+:root {
+    --zoopedia-bg: #f5f5f7;
+    --zoopedia-card-bg: #ffffff;
+    --zoopedia-text: #1d1d1f;
+    --zoopedia-blue: #0071e3;
+}
+
+body {
+    background-color: var(--zoopedia-bg);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    color: var(--zoopedia-text);
+    margin: 0;
+}
+
+/* Premium zoopedia Nav Bar Styles */
+.zoopedia-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    z-index: 10000;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+}
+
+.nav-content {
+    width: 100%;
+    max-width: 1024px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.nav-logo img {
+    height: 40px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #1d1d1f;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.nav-links a:hover {
+    opacity: 1;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* BB8 Toggle Styles */
+.bb8-toggle { cursor: pointer; scale: 0.6; }
+.bb8-toggle__checkbox { display: none; }
+.bb8-toggle__container {
+    width: 100px; height: 50px;
+    background: #47abe1; border-radius: 25px;
+    position: relative; transition: background 0.3s;
+    overflow: hidden;
+}
+.bb8 {
+    width: 40px; height: 40px;
+    position: absolute; left: 5px; top: 5px;
+    transition: transform 0.5s cubic-bezier(0.8, -0.5, 0.2, 1.4);
+}
+.bb8__head-container {
+    width: 30px; height: 15px; background: #fff;
+    border-radius: 15px 15px 0 0; border: 2px solid #333; margin: 0 auto;
+}
+.bb8__body {
+    width: 36px; height: 36px; background: #fff;
+    border-radius: 50%; border: 2px solid #333; margin-top: -5px;
+}
+.bb8-toggle__checkbox:checked + .bb8-toggle__container { background: #2c3e50; }
+.bb8-toggle__checkbox:checked + .bb8-toggle__container .bb8 {
+    transform: translateX(50px) rotate(360deg);
+}
+
+/* Products Layout */
+.products-header {
+    max-width: 1200px;
+    margin: 120px auto 40px;
+    padding: 0 20px;
+}
+
+.products-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.products-grid {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 0 20px;
+}
+
+.product-card {
+    background: var(--zoopedia-card-bg);
+    border-radius: 24px;
+    padding: 32px;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-card:hover { transform: translateY(-5px); }
+
+.btn-pay {
+    background: var(--zoopedia-blue);
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Payment Modal Overlay (zoopedia Glassmorphism) */
+.tap-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 11000;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tap-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 40px;
+    padding: 60px 40px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+    animation: sheetUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes sheetUp {
+    from { transform: translateY(40px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.popup-logo {
+    width: 60px; /* Small, elegant centered logo */
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.zoopedia-pay-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #86868b;
+    margin-bottom: 25px;
+    display: block;
+}
+
+.sensor-area {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(0, 113, 227, 0.03);
+    margin: 0 auto 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 1px solid rgba(0, 113, 227, 0.05);
+}
+
+.phone-icon {
+    font-size: 50px;
+    color: #0071e3;
+    transition: all 0.3s;
+}
+
+#auth-title-laptop {
+    font-size: 26px;
+    font-weight: 600;
+    color: #1d1d1f;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+}
+
+#auth-desc-laptop {
+    color: #86868b;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 0 30px;
+    margin-bottom: 0;
+    font-weight: 400;
+}
+
+#debug-status {
+    font-size: 11px;
+    color: #aeaeb2;
+    margin-top: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.success-tick {
+    font-size: 90px;
+    color: #34c759;
+    filter: drop-shadow(0 10px 20px rgba(52, 199, 89, 0.2));
+}
+
+/* --- zoopedia Wallet Styles --- */
+.wallet-icon-btn {
+    font-size: 20px;
+    color: #1d1d1f;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.wallet-icon-btn:hover { transform: scale(1.1); color: #0071e3; }
+
+.wallet-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3); backdrop-filter: blur(20px);
+    display: none; justify-content: center; align-items: center; z-index: 12000;
+}
+
+.wallet-sheet {
+    background: #f5f5f7; border-radius: 40px; width: 450px; padding: 40px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2); animation: sheetUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.wallet-card-list {
+    margin-top: 30px; display: flex; flex-direction: column; gap: 15px;
+}
+
+/* Glassmorphic Credit Card UI */
+.cc-card {
+    background: linear-gradient(135deg, #1d1d1f 0%, #434343 100%);
+    border-radius: 20px; padding: 25px; color: white; position: relative;
+    height: 180px; display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15); transition: transform 0.3s;
+    cursor: pointer; overflow: hidden;
+}
+
+.cc-card.selected { border: 3px solid #0071e3; transform: scale(1.02); }
+
+.cc-card::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+}
+
+.cc-type { font-weight: 700; font-style: italic; font-size: 20px; text-align: right; }
+.cc-number { font-size: 18px; letter-spacing: 4px; font-family: 'Courier New', monospace; margin: 20px 0; }
+.cc-bottom { display: flex; justify-content: space-between; font-size: 12px; text-transform: uppercase; }
+
+/* Add Card Form */
+.add-card-form { margin-top: 30px; display: none; }
+.add-card-form input {
+    width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px;
+    border: 1px solid #d2d2d7; background: white; font-size: 15px;
+}
+
+.btn-zoopedia-black {
+    background: #1d1d1f; color: white; border: none; padding: 15px;
+    width: 100%; border-radius: 15px; font-weight: 600; cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-zoopedia-black:hover { background: #000; }
+/* --- Rescue Mission: EXACT Layout Fix --- */
+.rescue-hero {
+    position: fixed; 
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: #fff url('img/elements/mon\ save.png') no-repeat bottom center;
+    background-size: cover;
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start; 
+    padding-top: 120px; /* Offset for navigation bar */
+    z-index: 1; 
+}
+
+.rescue-hero::before {
+    display: none;
+}
+
+.rescue-ui-top {
+    text-align: center;
+    width: 100%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.exact-title {
+    font-size: 48px;
+    font-weight: 900;
+    color: #000;
+    margin: 0;
+    text-transform: uppercase;
+    font-family: 'BebasNeuefont', sans-serif;
+}
+
+.exact-tagline {
+    font-size: 24px;
+    color: #000;
+    margin: 5px 0 20px 0;
+    font-weight: 500;
+    text-align: center;
+    width: 100%;
+}
+
+.exact-controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.pill-input {
+    display: flex;
+    align-items: center;
+    border: 2px solid #007aff;
+    border-radius: 30px;
+    padding: 0 20px;
+    width: 160px;
+    background: #fff;
+    height: 45px;
+}
+
+.pill-input i {
+    font-size: 20px;
+    color: #000;
+    margin-right: 10px;
+}
+
+.pill-input input {
+    border: none;
+    outline: none;
+    font-size: 20px;
+    width: 100%;
+    font-weight: 600;
+    background: transparent;
+}
+
+/* Remove spin buttons from number input */
+.pill-input input::-webkit-outer-spin-button,
+.pill-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pill-btn {
+    border: 2px solid #007aff;
+    border-radius: 30px;
+    padding: 0;
+    width: 80px;
+    height: 45px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pill-btn i {
+    font-size: 20px;
+    color: #000;
+}
+
+.pill-btn.ready {
+    background: #007aff;
+}
+
+.pill-btn.ready i {
+    color: #fff;
+}
+
+.pill-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- Success UI: Left Side Panel --- */
+#post-rescue-view {
+    position: fixed; top: 0; left: 0; width: 400px; height: 100vh;
+    background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+    z-index: 2000; display: none; flex-direction: column; 
+    align-items: center; justify-content: center; padding: 60px;
+    box-shadow: 20px 0 60px rgba(0,0,0,0.05);
+    animation: slideInLeft 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.success-card {
+    background: transparent; box-shadow: none;
+    padding: 0; text-align: left; width: 100%;
+}
+
+.rescue-summary h1 { 
+    font-family: 'SF Pro Display Bold', -apple-system, sans-serif;
+    font-size: 58px; font-weight: 800; color: #34c759; 
+    letter-spacing: -2px; margin: 0; line-height: 1;
+}
+
+.rescue-tagline {
+    font-family: 'SF Pro Display Bold', -apple-system, sans-serif;
+    font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+    color: #34c759; margin-top: 10px; font-weight: 700;
+}
+
+.rescue-summary p.desc { 
+    font-family: 'SF Pro Display Medium', -apple-system, sans-serif;
+    font-size: 17px; color: #86868b; line-height: 1.6;
+    margin-top: 40px; font-weight: 500;
+}
+
+/* Blue Rescue Hint */
+.chain-hint, #rescue-hint {
+    color: #007aff !important;
+    text-shadow: none !important;
+}
+
+@keyframes slideInLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+
+@font-face {
+    font-family: 'SF Pro Display Bold';
+    src: local('SF Pro Display Bold'), local('SF-Pro-Display-Bold');
+}
+@font-face {
+    font-family: 'SF Pro Display Medium';
+    src: local('SF Pro Display Medium'), local('SF-Pro-Display-Medium');
+}
+
+/* Freedom State for BG */
+.cage-opened { filter: brightness(1.1); transition: filter 2s; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Selection view in Pay Modal */
+#wallet-selection-view { display: none; }
+.mini-card-item {
+    background: #fbfbfd; 
+    border-radius: 14px; 
+    padding: 16px; 
+    display: flex;
+    align-items: center; 
+    gap: 15px; 
+    cursor: pointer; 
+    border: 2.5px solid transparent;
+    transition: all 0.3s ease; 
+    margin-bottom: 12px;
+}
+.mini-card-item:hover { background: #f5f5f7; }
+.mini-card-item.active { 
+    border-color: #007aff; 
+    background: #fff; 
+    box-shadow: 0 8px 24px rgba(0, 122, 255, 0.15);
+}
+
+.mini-card-item .mini-card-icon { 
+    width: 45px; 
+    height: 28px; 
+    border-radius: 6px; 
+    background: #1d1d1f; 
+    flex-shrink: 0;
+}
+
+.mini-card-item div { 
+    color: #1d1d1f !important; 
+    line-height: 1.2;
+}
+
+.tap-card h3 {
+    font-family: 'SFfontBold', sans-serif !important;
+    font-size: 26px !important;
+    margin-top: 15px !important;
+    color: #1d1d1f !important;
+}
+
+.tap-card p {
+    font-family: 'SFfontNomal', sans-serif !important;
+    font-size: 15px !important;
+    color: #86868b !important;
+    margin-bottom: 25px !important;
+}
+
+.btn-zoopedia-black {
+    background: #1d1d1f; 
+    color: white; 
+    border: none; 
+    padding: 16px;
+    width: 100%; 
+    border-radius: 14px; 
+    font-weight: 600; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 16px;
+    font-family: 'SFfontBold', sans-serif;
+}
+
+.btn-zoopedia-black:hover { 
+    background: #000; 
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.btn-zoopedia-black:active {
+    transform: scale(0.98);
+}
+
+.btn-zoopedia-black:disabled {
+    background: #d2d2d7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Post Rescue View */
+#post-rescue-view {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    padding: 60px 50px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    color: #ffffff;
+    z-index: 10;
+    position: absolute;
+}
+
+.rescue-badge {
+    width: 80px;
+    height: 80px;
+    background: rgba(50, 215, 75, 0.1);
+    border: 2px solid #32d74b;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+    box-shadow: 0 0 30px rgba(50, 215, 75, 0.4);
+    animation: pulseBadge 2s infinite;
+}
+
+.rescue-badge i {
+    font-size: 36px;
+    color: #32d74b;
+}
+
+@keyframes pulseBadge {
+    0% { box-shadow: 0 0 0 0 rgba(50, 215, 75, 0.4); }
+    70% { box-shadow: 0 0 0 20px rgba(50, 215, 75, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(50, 215, 75, 0); }
+}
+
+.rescue-summary h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #ffffff 0%, #32d74b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.rescue-summary p {
+    font-size: 18px;
+    opacity: 0.9;
+    line-height: 1.6;
+}

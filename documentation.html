@@ -1,0 +1,1038 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoopedia Prime — jQuery Technical Breakdown</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --green: #16a34a;
+      --dark: #0f172a;
+      --mid: #1e293b;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+      --code-bg: #0f172a;
+      --accent: #6d28d9;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #1e293b;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ─── COVER PAGE ───── */
+    .cover {
+      background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 40px;
+      page-break-after: always;
+    }
+    .cover-logo { font-size: 80px; margin-bottom: 20px; }
+    .cover h1 { font-size: 42px; font-weight: 800; letter-spacing: -1px; color: #a78bfa; }
+    .cover h2 { font-size: 20px; font-weight: 400; color: #94a3b8; margin-top: 8px; }
+    .cover-divider { width: 80px; height: 3px; background: #6d28d9; margin: 30px auto; border-radius: 4px; }
+    .cover-meta { color: #64748b; font-size: 14px; }
+    .cover-meta strong { color: #a78bfa; }
+    .cover-tag {
+      display: inline-block; margin-top: 30px;
+      background: rgba(109,40,217,0.2); border: 1px solid #6d28d9;
+      color: #a78bfa; padding: 8px 22px; border-radius: 20px; font-size: 13px;
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+    .feature-chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 30px; }
+    .feature-chip {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      color: #e2e8f0; padding: 6px 16px; border-radius: 20px; font-size: 12px;
+    }
+
+    /* ─── CONTENT ───── */
+    .main { max-width: 900px; margin: 0 auto; padding: 40px 30px; }
+
+    /* ─── CRITERIA GLOSSARY ───── */
+    .glossary-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 20px 0;
+    }
+    .glossary-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 14px;
+      border-left: 4px solid var(--accent);
+    }
+    .glossary-num { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; }
+    .glossary-title { font-size: 15px; font-weight: 700; margin: 4px 0; }
+    .glossary-desc { font-size: 12px; color: #64748b; }
+    .glossary-example { font-family: 'Fira Code', monospace; font-size: 11px; color: var(--green); margin-top: 6px; background: #f0fdf4; padding: 4px 8px; border-radius: 4px; }
+
+    /* ─── SECTION ───── */
+    .section { margin: 50px 0; page-break-inside: avoid; }
+    .section-header {
+      background: linear-gradient(135deg, var(--dark) 0%, #1e1b4b 100%);
+      color: white; border-radius: 12px 12px 0 0; padding: 20px 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .section-num {
+      background: var(--accent); color: white; width: 40px; height: 40px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px; flex-shrink: 0;
+    }
+    .section-title-block h2 { font-size: 18px; font-weight: 700; }
+    .section-title-block p { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    .section-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 12px 12px; padding: 24px; }
+
+    /* ─── PURPOSE BOX ───── */
+    .purpose-box {
+      background: #f0fdf4; border-left: 4px solid var(--green);
+      border-radius: 6px; padding: 12px 16px; margin-bottom: 20px;
+    }
+    .purpose-box strong { display: block; color: var(--green); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+
+    /* ─── CRITERIA BADGE ───── */
+    .criteria-item { margin-bottom: 22px; }
+    .criteria-badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;
+      background: #ede9fe; color: var(--accent); padding: 4px 12px;
+      border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .criteria-badge .num { background: var(--accent); color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    .criteria-item p { font-size: 12.5px; color: #475569; margin-bottom: 8px; }
+
+    /* ─── CODE BLOCK ───── */
+    .code-block {
+      background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; margin: 8px 0;
+    }
+    .code-block pre { font-family: 'Fira Code', monospace; font-size: 11.5px; color: #e2e8f0; white-space: pre-wrap; }
+    .code-block .comment { color: #64748b; font-style: italic; }
+    .code-block .keyword { color: #818cf8; }
+    .code-block .string { color: #34d399; }
+    .code-block .func { color: #fbbf24; }
+    .code-block .jquery { color: #f472b6; }
+
+    /* ─── COMPLIANCE TABLE ───── */
+    .compliance-section { margin: 50px 0; page-break-before: always; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead tr { background: var(--dark); color: white; }
+    th { padding: 12px 14px; text-align: left; font-weight: 600; letter-spacing: 0.5px; }
+    th:first-child { border-radius: 8px 0 0 0; }
+    th:last-child { border-radius: 0 8px 0 0; }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr.total-row td { background: #1e1b4b; color: white; font-weight: 700; }
+    tr.req-row td { background: #f0fdf4; color: var(--green); font-weight: 600; }
+    .pass { color: var(--green); font-weight: 700; }
+    td:not(:first-child) { text-align: center; }
+    .check { font-size: 16px; }
+
+    /* ─── FILE TABLE ───── */
+    .file-table td:first-child { font-family: 'Fira Code', monospace; font-size: 11px; background: #fafafa; color: var(--accent); font-weight: 600; }
+
+    /* ─── PAGE DIVIDER ───── */
+    .page-break { page-break-before: always; padding-top: 20px; }
+
+    /* PRINT */
+    @media print {
+      body { font-size: 11px; }
+      .cover { min-height: auto; padding: 40px 30px; }
+      .cover h1 { font-size: 32px; }
+      .main { padding: 20px; }
+      .page-break { page-break-before: always; }
+    }
+
+    /* Dark mode support for report UI - Increased specificity */
+    html body.dark-mode {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+    }
+    body.dark-mode .cover {
+      background: linear-gradient(145deg, #020617 0%, #0f172a 100%) !important;
+    }
+    body.dark-mode .glossary-card, 
+    body.dark-mode .section-body {
+      border-color: #334155;
+      background: #1e293b;
+      color: #f8fafc;
+    }
+    body.dark-mode .glossary-desc,
+    body.dark-mode .criteria-item p {
+      color: #94a3b8;
+    }
+    body.dark-mode .main h2,
+    body.dark-mode .section-title-block h2 {
+      color: #f8fafc;
+    }
+    body.dark-mode .section-header {
+      background: linear-gradient(135deg, #020617 0%, #1e293b 100%);
+    }
+      body.dark-mode .purpose-box {
+      background: #022c22;
+      border-left-color: #10b981;
+      color: #d1fae5;
+    }
+
+    /* ─── DOM TREE STYLES ───── */
+    .dom-tree {
+      background: #fdfdfd;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      margin: 30px 0;
+    }
+    .tree-node {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #475569;
+    }
+    .tree-node .tag { color: var(--accent); font-weight: 700; }
+    .tree-node .attr { color: #0891b2; font-style: italic; }
+    .tree-node .indent { color: #cbd5e1; margin-right: 5px; }
+    .tree-page-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 20px 0 10px;
+      color: var(--dark);
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+    body.dark-mode .dom-tree {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    body.dark-mode .tree-page-title { color: #f8fafc; }
+    body.dark-mode .tree-node { color: #94a3b8; }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="darkmode.css">
+      <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+  <body>
+
+                <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+  <script src="darkmode.js"></script>
+
+  <!-- COVER PAGE -->
+  <div class="cover">
+    <div class="cover-logo">🦁</div>
+    <h1>Zoopedia Prime</h1>
+    <h2>Complete jQuery Technical Breakdown</h2>
+    <div class="cover-divider"></div>
+    <p class="cover-meta"><strong>Course Task:</strong> Class Task 6 — jQuery DOM Implementation</p>
+    <p class="cover-meta" style="margin-top:6px"><strong>Date:</strong> April 2026</p>
+
+    <div class="feature-chips">
+      <span class="feature-chip">👤 Grid + TV Signal</span>
+      <span class="feature-chip">👤 Dark Mode</span>
+      <span class="feature-chip">👤 Video Banner</span>
+      <span class="feature-chip">👤 Game System</span>
+      <span class="feature-chip">👤 Form Validation</span>
+      <span class="feature-chip">👤 AI + Gesture</span>
+    </div>
+    <div class="cover-tag">Class Task Documentation</div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- GLOSSARY -->
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:6px">🔑 jQuery Criteria Glossary</h2>
+    <p style="color:#64748b;margin-bottom:16px">What each criteria means — explained so anyone can understand it, even without jQuery knowledge.</p>
+
+    <div class="glossary-grid">
+      <div class="glossary-card">
+        <div class="glossary-num">Criteria 1</div>
+        <div class="glossary-title">DOM Traversal</div>
+        <div class="glossary-desc">Moving around the page structure — finding parent elements, child elements, or siblings of a selected element.</div>
+        <div class="glossary-example">$(this).find('.card') → Search inside this element</div>
+      </div>
+      <div class="glossary-card">
+        <div class="glossary-num">Criteria 2</div>
+        <div class="glossary-title">DOM Modification</div>
+        <div class="glossary-desc">Adding or removing things from the page at runtime — creating new HTML elements on the fly and injecting them, or deleting them.</div>
+        <div class="glossary-example">$('.list').append('&lt;li&gt;New Item&lt;/li&gt;')</div>
+      </div>
+      <div class="glossary-card">
+        <div class="glossary-num">Criteria 3</div>
+        <div class="glossary-title">DOM Attribute Modification</div>
+        <div class="glossary-desc">Changing the properties or settings of an HTML element — like changing an image source, disabling a button, or setting custom data values.</div>
+        <div class="glossary-example">$('img').attr('src', 'new.jpg')</div>
+      </div>
+      <div class="glossary-card">
+        <div class="glossary-num">Criteria 4</div>
+        <div class="glossary-title">CSS Manipulation</div>
+        <div class="glossary-desc">Changing the visual style directly through code — changing colors, sizes, toggling class names that apply stylesheet rules to elements.</div>
+        <div class="glossary-example">$('body').addClass('dark-mode')</div>
+      </div>
+      <div class="glossary-card">
+        <div class="glossary-num">Criteria 5</div>
+        <div class="glossary-title">JavaScript Effects</div>
+        <div class="glossary-desc">Animated, timed visual transitions — like making something fade in/out smoothly, or slide a panel up or down over a specified duration.</div>
+        <div class="glossary-example">$('#popup').fadeIn(300)</div>
+      </div>
+      <div class="glossary-card">
+        <div class="glossary-num">Criteria 6</div>
+        <div class="glossary-title">HTML Events</div>
+        <div class="glossary-desc">Responding to user actions — like clicks, key presses, typing in a text box, or hovering over an element. These are the triggers for interactivity.</div>
+        <div class="glossary-example">$('#btn').on('click', function() {})</div>
+      </div>
+    </div>
+
+    <!-- FEATURE 1 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">1</div>
+        <div class="section-title-block">
+          <h2>Grid System, TV Signal Lost Effect & Search Lock</h2>
+          <p>📁 main.js &nbsp;|&nbsp; 📄 vaultpage.html</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="purpose-box">
+          <strong>Purpose</strong>
+          The Vault page shows all animals as a grid of retro-styled TV monitor cards. As the user types in the search box, non-matching animals get a "TV static corruption" visual effect and their "View" button changes to "LOCKED" — creating an immersive, branded filtering experience.
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">6</span>HTML Events — Live Search Trigger & Hover Glow</div>
+          <p><strong>How:</strong> <code>.on('input')</code> fires on every keystroke, <code>.on('mouseenter/.mouseleave')</code> handles card hover glow.</p>
+          <div class="code-block"><pre><span class="comment">// Every time user types in search box (main.js Line 53)</span>
+  <span class="jquery">$</span>(<span class="string">'#animalSearch'</span>).on(<span class="string">'input'</span>, <span class="keyword">function</span>() {
+      <span class="keyword">let</span> value = <span class="jquery">$</span>(<span class="keyword">this</span>).val().toLowerCase().trim();
+      <span class="comment">// ...filter logic runs here for every key press</span>
+  });
+
+  <span class="comment">// Hover glow on card enter/leave (main.js Line 75)</span>
+  <span class="jquery">$</span>(document).on(<span class="string">'mouseenter'</span>, <span class="string">'.custom-card-tv'</span>, <span class="keyword">function</span>() {
+      <span class="jquery">$</span>(<span class="keyword">this</span>).css({ <span class="string">'border'</span>: <span class="string">'2px solid #7711a7'</span>, <span class="string">'box-shadow'</span>: <span class="string">'0 0 15px #ce9ee5'</span> });
+  });</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">1</span>DOM Traversal — Find Elements Inside Each Card</div>
+          <p><strong>How:</strong> <code>.find()</code> searches <em>downward inside</em> each wrapper div to reach the card and button elements.</p>
+          <div class="code-block"><pre><span class="comment">// main.js Lines 60–61</span>
+  <span class="keyword">let</span> $card = <span class="jquery">$</span>(<span class="keyword">this</span>).find(<span class="string">'.custom-card-tv'</span>); <span class="comment">// Go into this wrapper, find the card</span>
+  <span class="keyword">let</span> $btn  = <span class="jquery">$</span>(<span class="keyword">this</span>).find(<span class="string">'a'</span>);              <span class="comment">// Go into this wrapper, find the link button</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">4</span>CSS Manipulation — Apply & Remove Signal Lost Style</div>
+          <p><strong>How:</strong> <code>.addClass('signal-lost')</code> triggers the TV static animation. <code>.css('pointer-events','none')</code> makes "LOCKED" buttons un-clickable.</p>
+          <div class="code-block"><pre><span class="comment">// main.js Lines 64–68</span>
+  <span class="keyword">if</span> (name.includes(value)) {
+      $card.removeClass(<span class="string">'signal-lost is-locked'</span>); <span class="comment">// Card matches: restore normal</span>
+      $btn.css(<span class="string">'pointer-events'</span>, <span class="string">'auto'</span>).text(<span class="string">'View'</span>);
+  } <span class="keyword">else</span> {
+      $card.addClass(<span class="string">'signal-lost is-locked'</span>);    <span class="comment">// No match: apply glitch effect</span>
+      $btn.css(<span class="string">'pointer-events'</span>, <span class="string">'none'</span>).text(<span class="string">'LOCKED'</span>);
+  }</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">2</span>DOM Modification — Build the Entire Card Grid at Runtime</div>
+          <p><strong>How:</strong> Animal cards are <em>not</em> hard-coded in HTML. <code>.append(cardHtml)</code> dynamically generates and injects every card from the animal data.</p>
+          <div class="code-block"><pre><span class="comment">// main.js Lines 26–42</span>
+  <span class="keyword">let</span> cardHtml = <span class="string">`&lt;div class="animal-wrapper" data-name="${animal.animalname}"&gt;
+      &lt;div class="custom-card-tv"&gt;
+          &lt;div class="static-overlay"&gt;&lt;/div&gt;
+          &lt;img src="${animal.image}"&gt;
+          &lt;h5&gt;${animal.animalname}&lt;/h5&gt;
+      &lt;/div&gt;
+  &lt;/div&gt;`</span>;
+  container.append(cardHtml); <span class="comment">// Injects each card into the grid</span></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!--FEATURE 2 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">2</div>
+        <div class="section-title-block">
+          <h2>Dark Mode & Light Mode</h2>
+          <p>📁 darkmode.js &nbsp;|&nbsp; 📄 All pages (navbar)</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="purpose-box">
+          <strong>Purpose</strong>
+          A BB8 Droid-themed toggle switch in the navbar switches the entire website between a dark space-themed aesthetic and a bright light mode. The choice is saved in <code>localStorage</code> and remembered across every page and after browser restarts.
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">4</span>CSS Manipulation — One Class Changes Everything</div>
+          <p><strong>How:</strong> Adding <code>'dark-mode'</code> to <code>&lt;body&gt;</code> triggers hundreds of CSS rules simultaneously. All dark-mode colors and backgrounds are defined in <code>style.css</code> under <code>body.dark-mode</code>.</p>
+          <div class="code-block"><pre><span class="comment">// darkmode.js Lines 9 & 13</span>
+  $body.addClass(<span class="string">'dark-mode'</span>);     <span class="comment">// → Dark: adds class, triggers all dark CSS rules</span>
+  $body.removeClass(<span class="string">'dark-mode'</span>);  <span class="comment">// → Light: removes class, reverts all styles</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">3</span>DOM Attribute Modification — Syncing the Toggle Switch Visually</div>
+          <p><strong>How:</strong> <code>.prop('checked')</code> sets the checkbox's checked state so the BB8 ball moves to the correct position when the theme is loaded from storage.</p>
+          <div class="code-block"><pre><span class="comment">// darkmode.js Lines 11 & 15</span>
+  $checkbox.prop(<span class="string">'checked'</span>, <span class="keyword">true</span>);  <span class="comment">// Dark mode → move BB8 to the right</span>
+  $checkbox.prop(<span class="string">'checked'</span>, <span class="keyword">false</span>); <span class="comment">// Light mode → move BB8 to the left</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">6</span>HTML Events — The Toggle Switch Listener</div>
+          <p><strong>How:</strong> Listens for <code>change</code> and <code>click</code> events on the BB8 checkbox. <code>.is(':checked')</code> reads the current state to determine which theme to apply.</p>
+          <div class="code-block"><pre><span class="comment">// darkmode.js Lines 23–25</span>
+  <span class="jquery">$</span>(document).on(<span class="string">'change click'</span>, <span class="string">'.bb8-toggle__checkbox'</span>, <span class="keyword">function</span>() {
+      setTimeout(() =&gt; updateTheme(<span class="jquery">$</span>(<span class="keyword">this</span>).is(<span class="string">':checked'</span>)), 10);
+  });</pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!--FEATURE 3-->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">3</div>
+        <div class="section-title-block">
+          <h2>Video Banner Implementation</h2>
+          <p>📁 videoban.js &nbsp;|&nbsp; 📄 index.html, aboutpage.html</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="purpose-box">
+          <strong>Purpose</strong>
+          A full-width looping video plays automatically as a cinematic background on the home and about pages. A sound toggle button allows mute/unmute. Since browsers block autoplay with audio, the system silently mutes itself if needed and allows the user to unmute manually.
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">6</span>HTML Events — Sound Toggle Click</div>
+          <div class="code-block"><pre><span class="comment">// videoban.js Lines 52–55</span>
+  <span class="jquery">$</span>(<span class="string">'#toggle-sound'</span>).on(<span class="string">'click'</span>, <span class="keyword">function</span>() {
+      video.muted = !video.muted;
+      $icon.text(video.muted ? <span class="string">'🔈'</span> : <span class="string">'🔊'</span>); <span class="comment">// Update icon instantly</span>
+  });</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">2</span>DOM Modification — Updating Status Text</div>
+          <div class="code-block"><pre><span class="comment">// videoban.js Lines 13–17 — .html() completely replaces content</span>
+  <span class="jquery">$</span>(<span class="string">'#status-display'</span>).html(<span class="string">'&lt;p&gt;The loop is active!&lt;/p&gt;'</span>);
+  <span class="light">// or if video was paused:</span>
+  <span class="jquery">$</span>(<span class="string">'#status-display'</span>).html(<span class="string">'&lt;p&gt;Video started manually.&lt;/p&gt;'</span>);</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">4</span>CSS Manipulation — Title Color Change on Click</div>
+          <div class="code-block"><pre><span class="comment">// videoban.js Line 19</span>
+  <span class="jquery">$</span>(<span class="string">'#main-title'</span>).css(<span class="string">'color'</span>, <span class="string">'#ffcc00'</span>); <span class="comment">// Turns the title gold on click</span></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- FEATURE 4-->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">4</div>
+        <div class="section-title-block">
+          <h2>Wild Runner & Lizard Follower Games</h2>
+          <p>📁 dinogame.js, gamefuntion.js &nbsp;|&nbsp; 📄 gamepage.html</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="purpose-box">
+          <strong>Purpose</strong>
+          <strong>Wild Runner</strong> is a custom endless-runner game where the player selects from 6 animals and dodges obstacles. It is deliberately built to satisfy <em>all 6 jQuery criteria at least 3 times each</em> — comments in <code>dinogame.js</code> identify each with <code>// CRITERIA #N</code> labels. <strong>Lizard Follower</strong> is a canvas-based game where a lizard follows your cursor and hunts food.
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">1</span>DOM Traversal — 3 Explicit Instances</div>
+          <div class="code-block"><pre><span class="comment">// INSTANCE 1 (dinogame.js Line 64): .find() + .first()</span>
+  <span class="keyword">const</span> $firstBtn = $grid.find(<span class="string">'.dino-animal-btn'</span>).first();
+  <span class="comment">// Search inside $grid → retrieve only the very first animal button</span>
+
+  <span class="comment">// INSTANCE 2 (dinogame.js Line 83): .siblings()</span>
+  <span class="jquery">$</span>(<span class="keyword">this</span>).siblings(<span class="string">'.dino-animal-btn'</span>).removeClass(<span class="string">'selected'</span>);
+  <span class="comment">// From the clicked button → find all OTHER buttons at the same level → deselect them</span>
+
+  <span class="comment">// INSTANCE 3 (dinogame.js Line 150): .find() inside arena</span>
+  $arena.find(<span class="string">'.dino-obstacle'</span>).remove();
+  <span class="comment">// Inside the game arena → find all obstacle divs → delete them all</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">2</span>DOM Modification — 3 Explicit Instances</div>
+          <div class="code-block"><pre><span class="comment">// INSTANCE 1 (Lines 53–61): Build animal selector buttons dynamically</span>
+  ANIMALS.forEach(a => {
+      <span class="keyword">const</span> $btn = $(<span class="string">`&lt;button class="dino-animal-btn" data-id="${a.id}"&gt;
+          &lt;i class="${a.icon}"&gt;&lt;/i&gt;
+          &lt;span&gt;${a.label}&lt;/span&gt;
+      &lt;/button&gt;`</span>);
+      $grid.append($btn); <span class="comment">// Injects new button into the selector grid</span>
+  });
+
+  <span class="comment">// INSTANCE 2 (Line 91): .html() swaps runner character</span>
+  $runner.html(<span class="string">`&lt;i class="${selectedAnimal.icon}"&gt;&lt;/i&gt;`</span>);
+
+  <span class="comment">// INSTANCE 3 (Lines 193+): .append() creates obstacle during gameplay</span>
+  $arena.append($obs); <span class="comment">// Injects a new moving obstacle into the live game</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">3</span>DOM Attribute Modification — 3 Explicit Instances</div>
+          <div class="code-block"><pre><span class="comment">// INSTANCE 1 (Line 69): .attr() reads custom data attribute</span>
+  <span class="keyword">const</span> id = <span class="jquery">$</span>(<span class="keyword">this</span>).attr(<span class="string">'data-id'</span>); <span class="comment">// Reads which animal was clicked</span>
+
+  <span class="comment">// INSTANCE 2 (Line 92): .attr() writes accessibility label</span>
+  $runner.attr(<span class="string">'aria-label'</span>, selectedAnimal.label);
+
+  <span class="comment">// INSTANCE 3 (Line 162): .prop() disables button during gameplay</span>
+  <span class="jquery">$</span>(<span class="string">'#dino-start-btn'</span>).prop(<span class="string">'disabled'</span>, <span class="keyword">true</span>);
+  <span class="comment">// After game over: $('#dino-start-btn').removeAttr('disabled');</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">4</span>CSS Manipulation — 3 Explicit Instances</div>
+          <div class="code-block"><pre><span class="comment">// INSTANCE 1: Physics — moves runner every game frame</span>
+  $runner.css(<span class="string">'bottom'</span>, (FLOOR_H + playerY) + <span class="string">'px'</span>);
+  <span class="comment">// playerY changes each frame creating the jump arc</span>
+
+  <span class="comment">// INSTANCE 2: .addClass() highlight selected animal</span>
+  <span class="jquery">$</span>(<span class="keyword">this</span>).addClass(<span class="string">'selected'</span>);
+
+  <span class="comment">// INSTANCE 3: .addClass() triggers death animation</span>
+  $runner.addClass(<span class="string">'dino-dead'</span>); <span class="comment">// CSS defines a spinning/red animation</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">5</span>JavaScript Effects — 4 Instances</div>
+          <div class="code-block"><pre><span class="comment">// INSTANCE 1: Animal swap crossfade (Lines 88–94)</span>
+  $runner.fadeOut(<span class="string">150</span>, <span class="keyword">function</span>() {
+      $runner.html(<span class="string">`&lt;i class="${selectedAnimal.icon}"&gt;&lt;/i&gt;`</span>);
+      $runner.fadeIn(<span class="string">150</span>); <span class="comment">// Smooth icon swap</span>
+  });
+
+  <span class="comment">// INSTANCE 2: Hide selector when game starts (Line 121)</span>
+  <span class="jquery">$</span>(<span class="string">'#dino-selector'</span>).slideUp(<span class="string">300</span>, <span class="keyword">function</span>() { startGame(); });
+
+  <span class="comment">// INSTANCE 3: Close Game Over screen (Line 128)</span>
+  <span class="jquery">$</span>(<span class="string">'#dino-gameover'</span>).fadeOut(<span class="string">200</span>, <span class="keyword">function</span>() { startGame(); });
+
+  <span class="comment">// INSTANCE 4: Show Mr. Bean Game Over popup (Lines 281–282)</span>
+  <span class="jquery">$</span>(<span class="string">'#dino-gameover'</span>).fadeIn(<span class="string">400</span>);
+  <span class="jquery">$</span>(<span class="string">'#dino-selector'</span>).slideDown(<span class="string">400</span>); <span class="comment">// Brings back animal selector</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">6</span>HTML Events — 3 Explicit Instances</div>
+          <div class="code-block"><pre><span class="comment">// INSTANCE 1: Click on animal selection grid (Line 76)</span>
+  $grid.on(<span class="string">'click'</span>, <span class="string">'.dino-animal-btn'</span>, <span class="keyword">function</span>() { <span class="comment">/* change character */</span> });
+
+  <span class="comment">// INSTANCE 2: Hover effect on character buttons (Lines 97–99)</span>
+  $grid.on(<span class="string">'mouseenter'</span>, <span class="string">'.dino-animal-btn'</span>, <span class="keyword">function</span>() {
+      <span class="jquery">$</span>(<span class="keyword">this</span>).css(<span class="string">'opacity'</span>, <span class="string">'0.8'</span>);
+  }).on(<span class="string">'mouseleave'</span>, <span class="string">'.dino-animal-btn'</span>, <span class="keyword">function</span>() {
+      <span class="jquery">$</span>(<span class="keyword">this</span>).css(<span class="string">'opacity'</span>, <span class="string">'1'</span>);
+  });
+
+  <span class="comment">// INSTANCE 3: Spacebar/Arrow key to jump (Line 107)</span>
+  <span class="jquery">$</span>(document).on(<span class="string">'keydown.dino'</span>, <span class="keyword">function</span>(e) {
+      <span class="keyword">if</span> (e.code === <span class="string">'Space'</span> || e.code === <span class="string">'ArrowUp'</span>) {
+          e.preventDefault(); <span class="comment">// Stops page from scrolling</span>
+          jump();
+      }
+  });</pre></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ─── FEATURE 5 ─── -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">5</div>
+        <div class="section-title-block">
+          <h2>Contact Form Validation & Mr. Bean Popup</h2>
+          <p>📁 validatonsignal.js &nbsp;|&nbsp; 📄 contactpage.html</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="purpose-box">
+          <strong>Purpose</strong>
+          As the user types their email, real-time feedback appears: green tick (valid), yellow warning (missing @), red cross (invalid). On submit, a custom modal popup appears with Mr. Bean celebrating or showing disappointment depending on the validation state.
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">6</span>HTML Events — 3 Triggers</div>
+          <div class="code-block"><pre><span class="comment">// TRIGGER 1: Real-time validation as user types (Line 2)</span>
+  <span class="jquery">$</span>(<span class="string">'#email-input'</span>).on(<span class="string">'input'</span>, <span class="keyword">function</span>() {
+      <span class="keyword">const</span> val = <span class="jquery">$</span>(<span class="keyword">this</span>).val();
+      <span class="comment">// Validation runs here on EVERY keystroke</span>
+  });
+
+  <span class="comment">// TRIGGER 2: Submit button click → show popup (Line 71)</span>
+  <span class="jquery">$</span>(<span class="string">'#submit-btn'</span>).on(<span class="string">'click'</span>, <span class="keyword">function</span>(e) {
+      e.preventDefault(); <span class="comment">// CRITICAL: prevents page reload</span>
+  });
+
+  <span class="comment">// TRIGGER 3: Close button click → dismiss popup (Line 92)</span>
+  <span class="jquery">$</span>(<span class="string">'.close-btn'</span>).on(<span class="string">'click'</span>, <span class="keyword">function</span>() {
+      <span class="jquery">$</span>(<span class="string">'#modal-container'</span>).fadeOut(<span class="string">300</span>);
+  });</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">5</span>JavaScript Effects — Smooth Icon & Popup Transitions</div>
+          <div class="code-block"><pre><span class="comment">// Fade out icons when field empty (Line 11)</span>
+  <span class="jquery">$</span>(<span class="string">'.validation-icon'</span>).fadeOut(<span class="string">100</span>);
+
+  <span class="comment">// Fade in green tick (Line 18)</span>
+  $tick.fadeIn(<span class="string">300</span>).css(<span class="string">'color'</span>, <span class="string">'#28a745'</span>);
+
+  <span class="comment">// Fade in modal on submit (Line 79)</span>
+  <span class="jquery">$</span>(<span class="string">'#modal-container'</span>).css(<span class="string">'display'</span>, <span class="string">'flex'</span>).hide().fadeIn(<span class="string">300</span>);
+  <span class="comment">// Note: .css('display','flex') then .hide() then .fadeIn() ensures
+  // the modal centres correctly BEFORE the fade animation begins</span>
+
+  <span class="comment">// Fade out modal on close (Line 93)</span>
+  <span class="jquery">$</span>(<span class="string">'#modal-container'</span>).fadeOut(<span class="string">300</span>);</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">4</span>CSS Manipulation — Dynamic Border Color Feedback</div>
+          <div class="code-block"><pre><span class="comment">// Green border = valid email (Line 19)</span>
+  <span class="jquery">$</span>(<span class="keyword">this</span>).css(<span class="string">'border-color'</span>, <span class="string">'#28a745'</span>);
+
+  <span class="comment">// Red border = invalid email (Line 26)</span>
+  <span class="jquery">$</span>(<span class="keyword">this</span>).css(<span class="string">'border-color'</span>, <span class="string">'#dc3545'</span>);
+
+  <span class="comment">// Yellow border = incomplete but has @ (Line 32)</span>
+  <span class="jquery">$</span>(<span class="keyword">this</span>).css(<span class="string">'border-color'</span>, <span class="string">'#ffc107'</span>);</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">3</span>DOM Attribute Modification — Force Icon Color</div>
+          <div class="code-block"><pre><span class="comment">// Line 25: .attr() writes inline style with !important to override Bootstrap</span>
+  $cross.fadeIn(<span class="string">300</span>).attr(<span class="string">'style'</span>, <span class="string">'color: #dc3545 !important; display: inline-block;'</span>);</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">1</span>DOM Traversal — Check Icon State to Control Popup</div>
+          <div class="code-block"><pre><span class="comment">// Line 81: .is(':visible') checks if tick icon is currently showing</span>
+  <span class="keyword">if</span> (<span class="jquery">$</span>(<span class="string">'#tick-icon'</span>).is(<span class="string">':visible'</span>)) {
+      <span class="jquery">$</span>(<span class="string">'#success-box'</span>).show(); <span class="comment">// Show Mr. Bean happy</span>
+      <span class="jquery">$</span>(<span class="string">'#error-box'</span>).hide();
+  } <span class="keyword">else</span> {
+      <span class="jquery">$</span>(<span class="string">'#error-box'</span>).show();   <span class="comment">// Show Mr. Bean sad</span>
+      <span class="jquery">$</span>(<span class="string">'#success-box'</span>).hide();
+  }</pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE 6-->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-num">6</div>
+        <div class="section-title-block">
+          <h2>AI Assistant + Magic Hand Gesture Control</h2>
+          <p>📁 handtracking.js, NomadAi.js, mediacontrols.js &nbsp;|&nbsp; 📄 All pages</p>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="purpose-box">
+          <strong>Purpose</strong>
+          A dual touchless interface. <strong>Magic Hand</strong>: webcam tracks the user's hand to move a custom cursor, click elements (middle+thumb pinch) and scroll (index+thumb pinch). <strong>Nomad AI</strong>: clap to activate, then speak commands in English or Sinhala to navigate, switch themes, or control media. <strong>Media Controls</strong>: two floating buttons on every page toggle camera and microphone hardware completely — state persists across navigation.
+        </div>
+
+        <div class="purpose-box" style="background:#fefce8; border-color:#eab308; color:#854d0e;">
+          <strong>Advanced AI Logic Upgrades (New)</strong>
+          • <strong>Conversational Intent Filter:</strong> Prevents accidental navigation by detecting conversational phrases (e.g., "can you tell me") vs. direct commands.
+          • <strong>Cross-Page State Tracking:</strong> Uses <code>sessionStorage</code> to allow Alex to continue voice scripts after navigating (used for the "Dev Team" intro).
+          • <strong>Phonetic Name Correction:</strong> Direct TTS engine override ensures Sri Lankan names like Ameendree and Minasi are pronounced perfectly while text captions remain pristine.
+          • <strong>Markdown Sanitization:</strong> Automatically strips symbols like # and * before speech to prevent the engine from reading out symbols (e.g., "hashtag hashtag").
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">2</span>DOM Modification — Custom Cursor & Control Panel Created by jQuery</div>
+          <div class="code-block"><pre><span class="comment">// handtracking.js Lines 17–33: Cursor built entirely by jQuery</span>
+  <span class="keyword">const</span> $cursor = <span class="jquery">$</span>(<span class="string">'&lt;div id="zp-cursor"&gt;&lt;/div&gt;'</span>);
+  $cursor.css({ position: <span class="string">'fixed'</span>, clipPath: <span class="string">'polygon(0 0, 0 85%, 28% 65%...)'</span> });
+  <span class="jquery">$</span>(<span class="string">'body'</span>).append($cursor); <span class="comment">// Injects cursor — not in any HTML file</span>
+
+  <span class="comment">// mediacontrols.js Lines 9–19: Floating panel built by jQuery</span>
+  <span class="keyword">const</span> $panel = <span class="jquery">$</span>(<span class="string">`&lt;div id="zp-media-controls"&gt;
+      &lt;button id="zp-cam-btn"&gt;&lt;/button&gt;
+      &lt;button id="zp-mic-btn"&gt;&lt;/button&gt;
+  &lt;/div&gt;`</span>);
+  <span class="jquery">$</span>(<span class="string">'body'</span>).append($panel); <span class="comment">// Injects on EVERY page automatically</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">1</span>DOM Traversal — Safe Gesture Click Routing</div>
+          <div class="code-block"><pre><span class="comment">// handtracking.js Line 205: .closest() traverses UP the DOM tree</span>
+  <span class="keyword">if</span> ($el.closest(<span class="string">'#normad-container'</span>).length &gt; 0) {
+      showNotification(<span class="string">'Use physical click for AI 🎙️'</span>);
+      <span class="keyword">return</span>; <span class="comment">// HARD BLOCK: gestures cannot activate the AI</span>
+  }
+
+  <span class="comment">// handtracking.js Line 64: .first() to get the video element</span>
+  <span class="keyword">const</span> $video = <span class="jquery">$</span>(<span class="string">'video.input_video'</span>).first();</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">4</span>CSS Manipulation — AI State & Pinch Feedback</div>
+          <div class="code-block"><pre><span class="comment">// NomadAi.js: Toggle AI listening state visually</span>
+  <span class="jquery">$</span>(<span class="string">'#normad-container'</span>).addClass(<span class="string">'listening'</span>).removeClass(<span class="string">'idle'</span>);
+  <span class="comment">// The 'listening' class in style.css creates the pulsing green glow animation</span>
+
+  <span class="comment">// handtracking.js: Pinch visual feedback</span>
+  <span class="jquery">$</span>(<span class="string">'body'</span>).addClass(<span class="string">'hand-pinching'</span>);    <span class="comment">// Shrinks cursor to confirm click</span>
+  <span class="jquery">$</span>(<span class="string">'body'</span>).removeClass(<span class="string">'hand-pinching'</span>); <span class="comment">// Restores cursor after release</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">5</span>JavaScript Effects — Toast Notification</div>
+          <div class="code-block"><pre><span class="comment">// handtracking.js Line 253 — Animated notification system</span>
+  $note.text(text).css({ color: color, borderColor: color })
+      .stop(<span class="keyword">true</span>).fadeIn(<span class="string">200</span>).delay(<span class="string">2000</span>).fadeOut(<span class="string">500</span>);
+  <span class="comment">// Fades in (200ms) → stays (2000ms) → fades out (500ms)</span></pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">6</span>HTML Events — Physical-Only AI Activation</div>
+          <div class="code-block"><pre><span class="comment">// NomadAi.js Line 438: Only REAL hardware clicks allowed (isTrusted check)</span>
+  <span class="jquery">$</span>(<span class="string">'#normad-container'</span>).on(<span class="string">'click dblclick'</span>, <span class="keyword">function</span>(e) {
+      <span class="comment">// e.originalEvent.isTrusted = true ONLY for real mouse clicks</span>
+      <span class="comment">// Gesture-synthesized clicks have isTrusted = false → REJECTED</span>
+      <span class="keyword">if</span> (!e.originalEvent || !e.originalEvent.isTrusted) <span class="keyword">return</span>;
+      <span class="comment">// Only reaches here for genuine hardware clicks</span>
+      <span class="keyword">if</span> (<span class="jquery">$</span>(<span class="string">'#normad-container'</span>).hasClass(<span class="string">'listening'</span>)) { standDown(); }
+      <span class="keyword">else</span> { powerUp(); }
+  });</pre></div>
+        </div>
+
+        <div class="criteria-item">
+          <div class="criteria-badge"><span class="num">3</span>DOM Attribute Modification — Media Button State & LocalStorage</div>
+          <div class="code-block"><pre><span class="comment">// mediacontrols.js: Update button tooltip text</span>
+  $btn.attr(<span class="string">'title'</span>, <span class="string">'Camera Off'</span>);
+  $btn.attr(<span class="string">'title'</span>, <span class="string">'Toggle Camera'</span>);
+
+  <span class="comment">// Persist state — survives page refresh and navigation</span>
+  localStorage.setItem(<span class="string">'zpCamMuted'</span>, <span class="string">'true'</span>);
+  <span class="keyword">let</span> camActive = localStorage.getItem(<span class="string">'zpCamMuted'</span>) !== <span class="string">'true'</span>;</pre></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE TABLE  -->
+    <div class="compliance-section">
+      <h2 style="font-size:22px;font-weight:800;margin-bottom:16px">📊 Full Compliance Summary Table</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>DOM Traversal</th>
+              <th>DOM Modification</th>
+              <th>Attr Modification</th>
+              <th>CSS Manip.</th>
+              <th>Effects</th>
+              <th>HTML Events</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1. Grid + TV Signal</td><td>2×</td><td>2×</td><td>1×</td><td>3×</td><td>—</td><td>3×</td></tr>
+            <tr><td>2. Dark Mode</td><td>1×</td><td>—</td><td>2×</td><td>2×</td><td>—</td><td>1×</td></tr>
+            <tr><td>3. Video Banner</td><td>—</td><td>2×</td><td>2×</td><td>1×</td><td>—</td><td>2×</td></tr>
+            <tr><td>4. Wild Runner Game</td><td><strong>3×</strong></td><td><strong>3×</strong></td><td><strong>3×</strong></td><td><strong>3×</strong></td><td><strong>4×</strong></td><td><strong>3×</strong></td></tr>
+            <tr><td>4. Lizard Follower</td><td>1×</td><td>—</td><td>—</td><td>—</td><td>2×</td><td>2×</td></tr>
+            <tr><td>5. Contact Validation</td><td>1×</td><td>—</td><td>2×</td><td>3×</td><td>4×</td><td>3×</td></tr>
+            <tr><td>6. AI + Gesture</td><td>3×</td><td>3×</td><td>2×</td><td>3×</td><td>2×</td><td>3×</td></tr>
+            <tr class="total-row"><td>TOTAL</td><td>11×</td><td>10×</td><td>10×</td><td>15×</td><td>12×</td><td>17×</td></tr>
+            <tr class="req-row"><td>Required (minimum)</td><td>3×</td><td>3×</td><td>3×</td><td>3×</td><td>3×</td><td>3×</td></tr>
+            <tr><td><strong>Status</strong></td>
+              <td class="pass">✅ PASS</td><td class="pass">✅ PASS</td><td class="pass">✅ PASS</td>
+              <td class="pass">✅ PASS</td><td class="pass">✅ PASS</td><td class="pass">✅ PASS</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- File Reference -->
+      <h2 style="font-size:18px;font-weight:800;margin:40px 0 12px">📁 Project File Reference</h2>
+      <table class="file-table">
+        <thead>
+          <tr><th>File</th><th style="text-align:left">Feature / Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>main.js</td><td>Grid gallery, TV signal lost effect, search filtering, hover effects</td></tr>
+          <tr><td>darkmode.js</td><td>BB8 dark/light toggle, localStorage persistence, global API</td></tr>
+          <tr><td>videoban.js</td><td>Video banner autoplay handling, sound mute toggle</td></tr>
+          <tr><td>dinogame.js</td><td>Wild Runner endless runner — full 6-criteria jQuery showcase</td></tr>
+          <tr><td>gamefuntion.js</td><td>Lizard Follower canvas game, spawn controls, game over popup</td></tr>
+          <tr><td>validatonsignal.js</td><td>Live email validation, Mr. Bean popup modal, form submission</td></tr>
+          <tr><td>handtracking.js</td><td>MediaPipe gesture control, custom cursor, pinch-to-click, scroll</td></tr>
+          <tr><td>NomadAi.js</td><td>Voice AI (Alex/Sussi), clap detection, intent parsing, navigation</td></tr>
+          <tr><td>mediacontrols.js</td><td>Floating Cam/Mic hardware toggle, localStorage state persistence</td></tr>
+          <tr><td>Alexbrain.js</td><td>English AI keyword engine, conversational intent scoring, phonetic voice correction, and cross-page speech logic</td></tr>
+          <tr><td>Samanthabrain.js</td><td>Sinhala AI keyword matching, localized intent scoring, and dynamic audio playback (reply.mpeg / opensai.mpeg)</td></tr>
+          <tr><td>style.css</td><td>All CSS: dark mode, signal-lost animation, game arena, media controls</td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:50px;text-align:center;color:#94a3b8;font-size:12px;border-top:1px solid #e2e8f0;padding-top:20px;">
+        <p>Zoopedia Prime — Class Task 6 Technical Documentation &nbsp;|&nbsp; April 2026</p>
+        <p style="margin-top:4px">To save as PDF: Open this file in Chrome → Press Ctrl+P → Select "Save as PDF"</p>
+      </div>
+    </div>
+
+  </div>
+      <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+</body>
+  </html>

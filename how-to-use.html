@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Use · Zoopedia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="darkmode.css" />
+  <link rel="stylesheet" href="auth.css" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="darkmode.js"></script>
+  <script src="auth.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000;
+      --surface: #111;
+      --border: rgba(255,255,255,0.08);
+      --accent: #2997ff;
+      --accent-glow: rgba(41,151,255,0.25);
+      --text-primary: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --dot-size: 44px;
+      --line-color: rgba(255,255,255,0.1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(0,0,0,0.72);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 52px;
+    }
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+    .nav-back {
+      font-size: 13px;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 100px 24px 60px;
+    }
+    .hero-eyebrow {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1.05;
+      background: linear-gradient(135deg, #f5f5f7 0%, #a1a1a6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 24px;
+    }
+    .hero p {
+      font-size: 19px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── STEPS CONTAINER ── */
+    .steps-section {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 24px 120px;
+    }
+
+    /* ── SINGLE STEP ── */
+    .step {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 56px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Vertical connector line */
+    .step:not(:last-child) .step-dot-col::after {
+      content: '';
+      position: absolute;
+      top: var(--dot-size);
+      left: calc(var(--dot-size) / 2 - 1px);
+      width: 2px;
+      height: calc(100% - var(--dot-size));
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      opacity: 0.3;
+    }
+
+    /* Left column: dot + line */
+    .step-dot-col {
+      position: relative;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .step-dot {
+      width: var(--dot-size);
+      height: var(--dot-size);
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      box-shadow: 0 0 0 0 var(--accent-glow);
+      transition: box-shadow 0.4s ease, border-color 0.4s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .step.visible .step-dot {
+      box-shadow: 0 0 0 8px var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    /* Right column: content */
+    .step-body {
+      flex: 1;
+      padding-top: 8px;
+    }
+    .step-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(41,151,255,0.1);
+      border: 1px solid rgba(41,151,255,0.25);
+      border-radius: 20px;
+      padding: 2px 10px;
+      margin-bottom: 10px;
+    }
+    .step-body h3 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .step-body p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 520px;
+    }
+
+    /* Optional card inside step */
+    .step-card {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.3s ease;
+    }
+    .step-card:hover { border-color: rgba(41,151,255,0.4); }
+    .step-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .step-card h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .step-card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── FINAL CTA ── */
+    .cta-section {
+      text-align: center;
+      padding: 80px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .cta-section h2 {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+    .cta-section p {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 32px;
+      border-radius: 980px;
+      text-decoration: none;
+      transition: filter 0.2s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover { filter: brightness(1.15); transform: scale(1.03); }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .step { gap: 20px; }
+      .step-body h3 { font-size: 18px; }
+      .hero h1 { letter-spacing: -1px; }
+    }
+  </style>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+<body>
+
+              <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Getting Started</p>
+    <h1>How to Use<br>Zoopedia</h1>
+    <p>Explore the wild like never before. Follow these simple steps to dive into your animal adventure.</p>
+  </section>
+
+  <!-- STEPS -->
+  <section class="steps-section">
+
+    <!-- Step 1 -->
+    <div class="step" id="step-1">
+      <div class="step-dot-col">
+        <div class="step-dot">1</div>
+      </div>
+      <div class="step-body">
+        <span class="step-tag">Start Here</span>
+        <h3>Create your account</h3>
+        <p>Sign up in seconds with your email. Your profile unlocks personalized animal recommendations, saved species, and your full Zoopedia history.</p>
+        <div class="step-card">
+          <div class="step-card-icon" style="background: rgba(41,151,255,0.12);">🦁</div>
+          <div>
+            <h4>Free to join</h4>
+            <p>No subscription needed. Full access to the animal library from day one.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" id="step-2">
+      <div class="step-dot-col">
+        <div class="step-dot">2</div>
+      </div>
+      <div class="step-body">
+        <span class="step-tag">Discover</span>
+        <h3>Browse or search animals</h3>
+        <p>Use the search bar or explore by habitat, diet, or category. Each animal card surfaces rich facts, sound clips, and stunning photography.</p>
+        <div class="step-card">
+          <div class="step-card-icon" style="background: rgba(52,199,89,0.12);">🔍</div>
+          <div>
+            <h4>Smart search</h4>
+            <p>Search by name, habitat, or even a fun fact — Zoopedia finds it instantly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step" id="step-3">
+      <div class="step-dot-col">
+        <div class="step-dot">3</div>
+      </div>
+      <div class="step-body">
+        <span class="step-tag">Interact</span>
+        <h3>Go hands-free with AI tracking</h3>
+        <p>Enable your camera and let Zoopedia's hand-tracking AI take over. Navigate menus, flip cards, and interact with 3D models — no touch required.</p>
+        <div class="step-card">
+          <div class="step-card-icon" style="background: rgba(255,159,10,0.12);">✋</div>
+          <div>
+            <h4>Gesture controls</h4>
+            <p>Wave, pinch, or point — the AI responds to your natural movements in real time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step" id="step-4">
+      <div class="step-dot-col">
+        <div class="step-dot">4</div>
+      </div>
+      <div class="step-body">
+        <span class="step-tag">Emergency</span>
+        <h3>Use SOS Radar when you need it</h3>
+        <p>Lost in the wild? Open the SOS Radar from any screen. It works offline too — detecting your location and broadcasting an emergency signal instantly.</p>
+        <div class="step-card">
+          <div class="step-card-icon" style="background: rgba(255,59,48,0.12);">🆘</div>
+          <div>
+            <h4>Always available</h4>
+            <p>SOS works even without internet. Your safety is always the first priority.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step" id="step-5">
+      <div class="step-dot-col">
+        <div class="step-dot">5</div>
+      </div>
+      <div class="step-body">
+        <span class="step-tag">Enjoy</span>
+        <h3>Save favourites &amp; share</h3>
+        <p>Star any animal to save it to your personal collection. Share species cards with friends or export them for school projects and research.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to explore?</h2>
+    <p>The entire animal kingdom is one tap away.</p>
+    <a class="btn-primary" href="index.html">Open Zoopedia →</a>
+  </section>
+
+  <!-- SCROLL ANIMATION -->
+  <script>
+    const steps = document.querySelectorAll('.step');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.25 });
+    steps.forEach(s => observer.observe(s));
+  </script>
+
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+[
+    {
+        "title": "hcc res ",
+        "author": "Zoopedia Researcher",
+        "category": "Research Document",
+        "content": "library_uploads\/1777984604_s41684-026-01724-7.pdf",
+        "id": 1,
+        "date": "2026-05-05",
+        "word_count": 7
+    },
+    {
+        "title": "hcc doc",
+        "author": "Zoopedia Researcher",
+        "category": "Research Document",
+        "content": "library_uploads\/1778166537_s41684-026-01724-7.pdf",
+        "id": 2,
+        "date": "2026-05-07",
+        "word_count": 7
+    },
+    {
+        "title": "ETF",
+        "author": "Zoopedia Researcher",
+        "category": "Research Document",
+        "content": "library_uploads\/1778424423_ETF.pdf",
+        "id": 3,
+        "date": "2026-05-10",
+        "word_count": 4
+    }
+]

@@ -1,0 +1,12 @@
+{
+  "name": "zoopedia-prime",
+  "version": "1.0.0",
+  "description": "Zoopedia Research Hub & Ecosystem",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo Starting Zoopedia Secure Tunnel... && npx localtunnel --port 80",
+    "tunnel": "npx localtunnel --port 80"
+  },
+  "author": "Zoopedia Team",
+  "license": "ISC"
+}

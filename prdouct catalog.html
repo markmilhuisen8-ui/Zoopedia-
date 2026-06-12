@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <link rel="stylesheet" href="mobileresponse.css">
+   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   <!-- Scripts moved to end -->
+   
+   
+   
+   
+   <link rel="stylesheet" href="style.css">
+   <link rel="stylesheet" href="zoopedia_feature.css">
+   <link rel="stylesheet" href="darkmode.css">
+   <link rel="stylesheet" href="auth.css">
+   <script src="https://accounts.google.com/gsi/client" async defer></script>
+   <script src="darkmode.js"></script>
+   <script src="auth.js"></script>
+    <title>Document</title>
+    <!-- MediaPipe Hand Tracking Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="handtracking.js" defer></script>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+
+<body>
+    <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+<!-- TextGridSecttion1 -->
+<!-- grid section (catalog) -->
+<h1 class="Grids reveal-on-scroll">Predatores</h1>
+
+<div class="container card-grid-container my-5">
+    <div class="row g-4"> <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/lion.png" alt="Dog">
+                <div class="card-body">
+                    <h4 class="reveal-on-scroll">Lion</h4>
+
+                    <p class="card-text">
+                       The mighty lion lives in large social groups called prides.
+Adult males grow thick manes and possess a loud roar.
+These powerful cats hunt big prey across the grassy plains.
+                    </p>
+                     <a href="singleanimalpage.html?id=17" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/tiger.png" alt="Cat">
+                <div class="card-body">
+                    <h4 class="reveal-on-scroll">Tiger</h4>
+                    <p class="card-text">The orange tiger has dark stripes and lives alone mostly.
+These massive cats are very strong and love to swim.
+They hunt deep inside the thick forests of the East.</p>
+                     <a href="singleanimalpage.html?id=18" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/wolf.png" alt="Pig">
+                <div class="card-body">
+                    <h4 class="reveal-on-scroll">Wolf</h4>
+                    <p class="card-text">The grey wolf lives and hunts in a smart pack.
+They howl loudly to talk with others from far away.
+These wild dogs can survive in the very cold snow.</p>
+                    <a href="singleanimalpage.html?id=19" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/croco.jpg" alt="Rabbit">
+                <div class="card-body">
+                    <h4>Crocodile</h4>
+                    <p class="card-text">The green crocodile lives in the water and the land.
+They have very strong jaws and a long scaly tail.
+These old reptiles hide and wait for their next meal.</p>
+                     <a href="singleanimalpage.html?id=20" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/cheet.png" alt="Parrot">
+                <div class="card-body">
+                    <h4>Cheetah</h4>
+                    <p class="card-text">The fast cheetah runs very quickly to catch its prey.
+They have black spots and a very lean long body.
+These thin cats hunt during the day in open fields.</p>
+                     <a href="singleanimalpage.html?id=21" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/owl.png" alt="Rat">
+                <div class="card-body">
+                    <h4>Owl</h4>
+                    <p class="card-text">The owl flies very quietly through the dark night sky.
+They have big eyes and can hear a tiny mouse.
+These birds can turn their heads almost all the way.</p>
+                     <a href="singleanimalpage.html?id=22" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/hyna.png" alt="Hamster">
+                <div class="card-body">
+                    <h4>Hyena</h4>
+                    <p class="card-text">The spotted hyena lives in a large and loud clan.
+They make a sound that feels like a human laugh.
+These smart animals hunt well and eat every single bone.</p>
+                    <a href="singleanimalpage.html?id=23" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/eagle.png" alt="Fish">
+                <div class="card-body">
+                    <h4>Eagle</h4>
+                    <p class="card-text">The big eagle flies high and has very sharp eyes.
+They use strong claws to grab fish from the lake.
+These birds build large nests on the very high rocks.</p>
+                    <a href="singleanimalpage.html?id=24" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/bear.png" alt="Fish">
+                <div class="card-body">
+                    <h4>Brown Bear</h4>
+                    <p class="card-text">The brown bear eats fish and berries in the woods.
+They are very big and sleep through the cold winter.
+These fuzzy giants use sharp claws to dig for food.</p>
+                     <a href="singleanimalpage.html?id=25" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/snow lep.png" alt="Fish">
+                <div class="card-body">
+                    <h4>Snow Leopard</h4>
+                    <p class="card-text">The snow leopard lives high up in the cold mountains.
+Their thick grey fur keeps them warm in the frost.
+These cats are very hard to find in the rocks.</p>
+                     <a href="singleanimalpage.html?id=26" class="btn btn-primary">Primary</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/leapord.png" alt="Fish">
+                <div class="card-body">
+                    <h4>Forest Leopard</h4>
+                    <p class="card-text">The forest leopard climbs up tall trees with great ease.
+They hide their food high up away from other beasts.
+Their spotted coat blends in with the dark green leaves.</p>
+                     <a href="singleanimalpage.html?id=27" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-6">
+            <div class="custom-card">
+                <img class="maincardimg" src="img/animals/polar bear.png" alt="Fish">
+                <div class="card-body">
+                    <h4>Polar Bear</h4>
+                    <p class="card-text">The polar bear is the largest land carnivore and is perfectly adapted to the Arctic.
+Their white fur and thick layer of blubber protect them from freezing temperatures.</p>
+                     <a href="singleanimalpage.html?id=28" class="btn btn-primary">View</a>
+                </div>
+            </div>
+        </div>
+
+    </div> </div>
+
+<!-- Button for pagination in pages -->
+<div class="button-wrapper">
+    <a href="wildlife.html" class="btn btn-outline-danger">2</a>
+    <a href="dommestic.html" class="btn btn-outline-danger">3</a>
+    <a href="Crawler.html" class="btn btn-outline-danger btn-img">
+        <img src="img/pagination item.png" style="width:75px;" alt="Next">
+    </a>
+
+</div>
+
+<div id="persistent-ai-container">
+    <div class="ai-controls-panel">
+        <div class="persona-switch-horizontal">
+            <span class="mini-label">Alex</span>
+            <label class="switch">
+                <input type="checkbox" id="persona-toggle">
+                <span class="slider"></span>
+            </label>
+            <span class="mini-label">Sussi</span>
+        </div>
+        <button id="ai-stop-btn" title="Stop AI"><i class="fa-solid fa-circle-stop"></i> STOP</button>
+    </div>
+
+    <div id="normad-container" class="idle">
+        <div class="orb"></div>
+    </div>
+
+    <div id="normad-caption-bar" style="display: none;"></div>
+</div>
+
+<!-- Footers -->
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+
+<!-- Hand Tracking Infrastructure -->
+<video class="input_video" style="display:none" playsinline></video>
+<canvas class="output_canvas" style="display:none"></canvas>
+<div id="hand-cursor" class="hand-cursor"></div>
+
+<!-- Hand Tracking Permission Modal -->
+<div id="hand-tracking-prompt" class="hand-prompt-overlay" style="display:none">
+  <div class="hand-prompt-card">
+      <div class="hand-prompt-icon"><i class="fas fa-hand-sparkles"></i></div>
+      <h3>Magic Hand Interaction</h3>
+      <p>Control Zoopedia Prime with your finger! Our AI tracks your movement in real-time. Video is processed locally and never saved.</p>
+      <div class="hand-prompt-actions">
+          <button id="btn-deny-hand" class="btn-deny">Not Now</button>
+          <button id="btn-agree-hand" class="btn-agree">Enable Magic</button>
+      </div>
+  </div>
+</div>
+
+<script src="animaldb.js"></script>
+<script src="Samanthabrain.js"></script>
+<script src="Alexbrain.js"></script>
+<script src="NomadAi.js"></script>
+<script src="mediacontrols.js" defer></script>
+<script src="handtracking.js"></script>
+<script src="main.js"></script>
+<script src="auth.js?v=3.0"></script>
+</body>
+</html>
+
+    
+

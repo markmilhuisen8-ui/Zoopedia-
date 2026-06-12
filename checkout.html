@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Zoopedia Prime</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode.css">
+    <link rel="stylesheet" href="auth.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="darkmode.js"></script>
+    <script src="auth.js"></script>
+    <style>
+        :root {
+            --zoopedia-bg: #fbfbfd;
+            --zoopedia-text: #1d1d1f;
+        }
+
+        body {
+            background-color: var(--zoopedia-bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--zoopedia-text);
+        }
+
+        .checkout-container {
+            max-width: 1000px;
+            margin: 100px auto;
+            padding: 40px;
+            display: flex;
+            gap: 60px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .product-image {
+            flex: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #e3e3e3 0%, #f5f5f7 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-image i {
+            font-size: 150px;
+            color: #0071e3;
+        }
+
+        .product-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .product-details h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: 500;
+            color: #86868b;
+            margin-bottom: 30px;
+        }
+
+        .description {
+            font-size: 17px;
+            line-height: 1.5;
+            color: #424245;
+            margin-bottom: 40px;
+        }
+
+        .btn-buy {
+            background: #0071e3;
+            color: white;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-buy:hover {
+            background: #0077ed;
+            transform: scale(1.02);
+        }
+
+        /* Payment Selector Modal */
+        .payment-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .payment-modal {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 40px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .payment-option:hover {
+            transform: scale(1.02);
+            border-color: #0071e3;
+        }
+
+        .payment-option i {
+            font-size: 24px;
+            color: #0071e3;
+        }
+
+        /* Tap to Pay Animation */
+        .tap-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(40px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+        }
+
+        .tap-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            width: 300px;
+            animation: fadeInScale 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .phone-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+            animation: phonePulse 2s infinite;
+        }
+
+        @keyframes phonePulse {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .success-tick {
+            font-size: 100px;
+            color: #34c759;
+            display: none;
+        }
+
+        /* Textbox for Criteria */
+        .feedback-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e3e3e3;
+        }
+
+        .feedback-section input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #d2d2d7;
+            margin-bottom: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+<body>
+                <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <div class="product-image">
+            <i class="fa-solid fa-crown"></i>
+        </div>
+        <div class="product-details">
+            <h1 id="p-name">Loading...</h1>
+            <p class="price" id="p-price">$0.00</p>
+            <p class="description" id="p-desc">
+                Loading description...
+            </p>
+            <button class="btn-buy" onclick="showPaymentOptions()">Buy Now</button>
+
+            <div class="feedback-section">
+                <p style="font-size: 14px; color: #86868b; margin-bottom: 8px;">Product Feedback (Criteria Test)</p>
+                <input type="text" id="feedback-input" placeholder="Type something to send to server...">
+                <button class="btn-auth" style="padding: 8px 15px; font-size: 14px;" onclick="sendFeedback()">Send to JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Options Modal -->
+    <div class="payment-modal-overlay" id="payment-overlay">
+        <div class="payment-modal">
+            <h2 style="margin-bottom: 20px;">Choose Payment</h2>
+            <div class="payment-option" onclick="alert('Credit Card UI coming soon...')">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Credit Card</span>
+            </div>
+            <div class="payment-option" onclick="startTapToPay()">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span>Tap to Pay</span>
+            </div>
+            <button class="btn-auth" style="background: transparent; color: #0071e3; margin-top: 10px;" onclick="closePaymentModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Tap to Pay Animation -->
+    <div class="tap-overlay" id="tap-overlay">
+        <div class="tap-card">
+            <div id="tap-instruction">
+                <i class="fa-solid fa-mobile-screen-button phone-icon"></i>
+                <h3>Tap to Pay</h3>
+                <p style="color: #86868b;">Place your phone on the trackpad to complete payment.</p>
+            </div>
+            <div id="tap-success" style="display: none;">
+                <i class="fa-solid fa-circle-check success-tick" style="display: block;"></i>
+                <h3>Done</h3>
+                <p style="color: #86868b;">Payment successful</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Card Modal -->
+    <div class="payment-modal-overlay" id="add-card-overlay">
+        <div class="payment-modal" style="width: 450px;">
+            <h2 style="margin-bottom: 20px;">Add New Card</h2>
+            <div class="auth-form-container">
+                <form id="add-card-form" onsubmit="saveNewCard(event)">
+                    <div class="input-group" style="text-align: left; margin-bottom: 15px;">
+                        <label style="font-size: 13px; font-weight: 500; color: #86868b;">Card Holder Name</label>
+                        <div class="input-wrapper" style="border: 1px solid #d2d2d7; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-user" style="color: #0071e3;"></i>
+                            <input type="text" id="card-holder" placeholder="John Doe" required style="border:none; outline:none; width:100%; background:transparent;">
+                        </div>
+                    </div>
+                    <div class="input-group" style="text-align: left; margin-bottom: 15px;">
+                        <label style="font-size: 13px; font-weight: 500; color: #86868b;">Card Number</label>
+                        <div class="input-wrapper" style="border: 1px solid #d2d2d7; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-credit-card" style="color: #0071e3;"></i>
+                            <input type="text" id="card-number" placeholder="5555 5555 5555 5555" maxlength="19" required style="border:none; outline:none; width:100%; background:transparent;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div class="input-group" style="flex: 1; text-align: left;">
+                            <label style="font-size: 13px; font-weight: 500; color: #86868b;">Expiry Date</label>
+                            <div class="input-wrapper" style="border: 1px solid #d2d2d7; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                                <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5" required style="border:none; outline:none; width:100%; background:transparent;">
+                            </div>
+                        </div>
+                        <div class="input-group" style="flex: 1; text-align: left;">
+                            <label style="font-size: 13px; font-weight: 500; color: #86868b;">CVV</label>
+                            <div class="input-wrapper" style="border: 1px solid #d2d2d7; padding: 12px; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                                <input type="password" id="card-cvv" placeholder="•••" maxlength="3" required style="border:none; outline:none; width:100%; background:transparent;">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-buy" style="width: 100%; margin-bottom: 10px;">Save Card & Continue</button>
+                    <button type="button" class="btn-auth" style="background: transparent; color: #86868b;" onclick="$('#add-card-overlay').hide()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Read one data record from JSON (Criteria)
+            $.get('product_service.php?id=1', function(product) {
+                $('#p-name').text(product.name);
+                $('#p-price').text('$' + product.price);
+                $('#p-desc').text(product.description);
+            });
+        });
+
+        function showPaymentOptions() {
+            // Check session first
+            $.get('check_session.php', function(res) {
+                if (!res.logged_in) {
+                    alert("Please sign in to complete your purchase.");
+                    openAuthModal();
+                    return;
+                }
+
+                // Check for saved cards
+                $.get('member6_wallet_api.php?action=fetch', function(cardRes) {
+                    if (cardRes.success && cardRes.cards.length === 0) {
+                        // No cards found, show Add Card popup
+                        $('#add-card-overlay').css('display', 'flex');
+                    } else {
+                        // Cards exist, show payment options
+                        $('#payment-overlay').css('display', 'flex');
+                    }
+                });
+            });
+        }
+
+        function saveNewCard(e) {
+            e.preventDefault();
+            const cardData = {
+                holder: $('#card-holder').val(),
+                number: $('#card-number').val(),
+                expiry: $('#card-expiry').val()
+            };
+
+            const btn = $('#add-card-form button[type="submit"]');
+            btn.prop('disabled', true).text('Saving...');
+
+            fetch('member6_wallet_api.php?action=add', {
+                method: 'POST',
+                body: JSON.stringify(cardData),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    $('#add-card-overlay').hide();
+                    $('#payment-overlay').css('display', 'flex');
+                } else {
+                    alert(res.message);
+                }
+            })
+            .finally(() => {
+                btn.prop('disabled', false).text('Save Card & Continue');
+            });
+        }
+
+        function closePaymentModal() {
+            $('#payment-overlay').hide();
+        }
+
+        let pollInterval = null;
+
+        async function startTapToPay() {
+            closePaymentModal();
+            $('#tap-overlay').css('display', 'flex');
+            
+            // 1. Generate a QR code for the phone to scan
+            const tryGetTunnel = async () => {
+                try {
+                    const res = await fetch('http://127.0.0.1:4040/api/tunnels');
+                    const data = await res.json();
+                    if (data.tunnels && data.tunnels.length > 0) {
+                        return data.tunnels[0].public_url;
+                    }
+                } catch (e) { console.log("No tunnel, using local IP."); }
+                
+                const ipRes = await fetch('get_local_ip.php');
+                const ipData = await ipRes.json();
+                return `http://${ipData.ip}`;
+            };
+
+            tryGetTunnel().then(baseUrl => {
+                const mobileUrl = `${baseUrl}/Zoopedia-main/sensor.php`;
+
+                // Clear previous QR if exists
+                const qrTarget = document.getElementById('tap-instruction');
+                qrTarget.innerHTML = `
+                    <div id="tap-qr" style="margin: 20px auto; width: 150px; height: 150px; background: #fff; padding: 10px; border-radius: 12px; display: flex; justify-content: center; align-items: center;"></div>
+                    <h3>Scan to Pay</h3>
+                    <p style="color: #86868b; font-size: 14px;">Scan with your mobile to verify payment</p>
+                `;
+                
+                new QRCode(document.getElementById("tap-qr"), {
+                    text: mobileUrl,
+                    width: 150,
+                    height: 150,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.M
+                });
+            });
+
+            // 2. Signal the bridge that laptop is active
+            fetch('sensor_bridge.php', {
+                method: 'POST',
+                body: JSON.stringify({ laptop_active: true, reset: true }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            // 3. Poll for verification
+            pollInterval = setInterval(() => {
+                fetch('sensor_bridge.php')
+                    .then(r => r.json())
+                    .then(sensorData => {
+                        if (sensorData.verified) {
+                            handlePaymentSuccess();
+                        }
+                    });
+            }, 500);
+        }
+
+        function handlePaymentSuccess() {
+            clearInterval(pollInterval);
+            $('#tap-instruction').fadeOut(300, function() {
+                $('#tap-success').fadeIn(300);
+                
+                // Signal bridge to close
+                fetch('sensor_bridge.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ laptop_active: false }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                setTimeout(() => {
+                    $('#tap-overlay').fadeOut(500);
+                    alert("Thank you for your purchase!");
+                    window.location.href = 'index.html';
+                }, 2000);
+            });
+        }
+
+        function sendFeedback() {
+            const val = $('#feedback-input').val();
+            if (!val) return;
+
+            const data = {
+                name: "User Feedback",
+                description: val,
+                price: 0,
+                category: "Feedback",
+                stock: 0,
+                rating: 5.0
+            };
+
+            $.ajax({
+                url: 'product_service.php',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('Record added to products.json!');
+                        $('#feedback-input').val('');
+                    }
+                }
+            });
+        }
+    </script>
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+</body>
+</html>

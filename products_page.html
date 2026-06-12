@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products | Zoopedia Prime</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="darkmode.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="products.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="darkmode.js"></script>
+    <script src="auth.js"></script>
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        .rescue-hero {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #fff url('img/elements/mon save.png') no-repeat center bottom !important;
+            background-size: cover !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            padding-top: 80px !important;
+            z-index: 1 !important;
+            overflow: hidden !important;
+        }
+        .rescue-ui-top {
+            text-align: center !important;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            z-index: 100 !important;
+            margin-top: 10px !important;
+        }
+        .exact-title {
+            font-size: 72px !important;
+            line-height: 0.9 !important;
+            font-weight: 900 !important;
+            color: #000 !important;
+            margin: 0 !important;
+            text-transform: uppercase !important;
+            font-family: 'SFfontBold', -apple-system, sans-serif !important;
+            letter-spacing: -2px !important;
+        }
+        .exact-tagline {
+            font-size: 28px !important;
+            color: #000 !important;
+            margin: 10px 0 25px 0 !important;
+            text-align: center !important;
+            width: 100% !important;
+            display: block !important;
+            font-weight: 500 !important;
+            font-family: 'SFfontNomal', sans-serif !important;
+            letter-spacing: -0.5px !important;
+        }
+        .exact-controls {
+            display: flex !important;
+            gap: 20px !important;
+            justify-content: center !important;
+            align-items: center !important;
+            margin-top: -99px !important;
+        }
+        .pill-input {
+            display: flex !important;
+            align-items: center !important;
+            border: 2px solid #007aff !important;
+            border-radius: 20px !important;
+            height: 34px !important;
+            width: 125px !important;
+            padding: 0 15px !important;
+            background: #fff !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+        }
+        .pill-input i { font-size: 14px !important; margin-right: 8px !important; }
+        .pill-input input { border: none !important; outline: none !important; font-size: 14px !important; width: 100% !important; background: transparent !important; font-weight: 600 !important; }
+        .pill-btn {
+            border: 2px solid #007aff !important;
+            border-radius: 20px !important;
+            height: 34px !important;
+            width: 60px !important;
+            background: #fff !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+            transition: all 0.2s ease !important;
+        }
+        .pill-btn i { font-size: 14px !important; color: #000 !important; }
+        .pill-btn.ready { background: #007aff !important; }
+        .pill-btn.ready i { color: #fff !important; }
+
+        .rescue-chain {
+            position: absolute !important;
+            top: 55% !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 20px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            z-index: 5 !important;
+            pointer-events: none !important;
+        }
+        .chain-segment {
+            flex-grow: 1 !important;
+            height: 8px !important;
+            background: linear-gradient(to bottom, #7f8c8d, #34495e) !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
+            transition: all 0.5s ease !important;
+        }
+        .chain-segment.left { border-radius: 0 4px 4px 0 !important; }
+        .chain-segment.right { border-radius: 4px 0 0 4px !important; }
+        .chain-lock {
+            width: 50px !important;
+            height: 50px !important;
+            background: #2c3e50 !important;
+            border: 3px solid #7f8c8d !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            color: #ecf0f1 !important;
+            font-size: 20px !important;
+            margin: 0 10px !important;
+            transition: all 0.3s ease !important;
+        }
+        .chain-hint {
+            position: absolute !important;
+            bottom: -30px !important;
+            color: #007aff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 2px !important;
+            font-size: 12px !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            animation: pulseHint 1.5s infinite !important;
+        }
+        @keyframes pulseHint { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .rescue-chain.cut .chain-segment.left { transform: translateX(-100vw) rotate(-20deg) !important; opacity: 0 !important; }
+        .rescue-chain.cut .chain-segment.right { transform: translateX(100vw) rotate(20deg) !important; opacity: 0 !important; }
+        .rescue-chain.cut .chain-lock { transform: translateY(100vh) rotate(90deg) !important; opacity: 0 !important; }
+
+        .magic-cursor {
+            position: fixed !important;
+            width: 30px !important;
+            height: 30px !important;
+            border: 2px solid #007aff !important;
+            border-radius: 50% !important;
+            pointer-events: none !important;
+            z-index: 10000 !important;
+            background: rgba(0, 122, 255, 0.1) !important;
+            transform: translate(-50%, -50%) !important;
+            transition: transform 0.1s ease-out, border-color 0.3s !important;
+            display: none;
+        }
+        .magic-cursor.active {
+            transform: translate(-50%, -50%) scale(1.8) !important;
+            border-color: #32d74b !important;
+            background: rgba(50, 215, 75, 0.2) !important;
+        }
+    </style>
+    <link rel="stylesheet" href="zoopedia-footer.css">
+    <style>
+/* zoopedia-footer.css */
+
+:root {
+    --zoopedia-footer-bg: #f5f5f7;
+    --zoopedia-footer-text: #1d1d1f;
+    --zoopedia-footer-link: #424245;
+    --zoopedia-footer-link-hover: #1d1d1f;
+    --zoopedia-footer-border: #d2d2d7;
+    --zoopedia-footer-legal-text: #6e6e73;
+    --zoop-link-blue: #0066cc;
+}
+
+body.dark-mode {
+    --zoopedia-footer-bg: #161617;
+    --zoopedia-footer-text: #f5f5f7;
+    --zoopedia-footer-link: #a1a1a6;
+    --zoopedia-footer-link-hover: #f5f5f7;
+    --zoopedia-footer-border: #424245;
+    --zoopedia-footer-legal-text: #86868b;
+    --zoop-link-blue: #2997ff;
+}
+
+/* Reset and Base Styles */
+.zoopedia-footer, .zoopedia-footer * {
+    box-sizing: border-box;
+}
+
+.zoopedia-footer {
+    background-color: #f5f5f7 !important; /* Fallback */
+    background-color: var(--zoopedia-footer-bg) !important;
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-text) !important;
+    padding: 30px 22px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    font-size: 12px !important;
+    line-height: 1.33337 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.01em !important;
+    margin-top: 50px !important;
+    border-top: 1px solid #d2d2d7 !important; /* Fallback */
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.zoopedia-footer a {
+    color: #424245 !important; /* Fallback */
+    color: var(--zoopedia-footer-link) !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.zoopedia-footer a:hover {
+    color: #1d1d1f !important; /* Fallback */
+    color: var(--zoopedia-footer-link-hover) !important;
+    text-decoration: underline !important;
+}
+
+.footer-content {
+    max-width: 980px !important;
+    margin: 0 auto !important;
+    padding: 0 0 40px !important;
+}
+
+/* Breadcrumb */
+.footer-breadcrumb {
+    padding: 17px 0 11px !important;
+    border-bottom: 1px solid #d2d2d7 !important;
+    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.footer-directory {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    padding-top: 20px !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+}
+
+.footer-column {
+    flex: 1 !important;
+    min-width: 150px !important;
+    margin-bottom: 20px !important;
+}
+
+.footer-column h3 {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    margin: 0 0 0.8em !important;
+    color: var(--zoopedia-footer-text) !important;
+    text-align: left !important;
+}
+
+.footer-column ul {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.footer-column ul li {
+    margin-bottom: 0.8em !important;
+    list-style: none !important;
+    text-align: left !important;
+}
+
+.footer-legal {
+    padding: 20px 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    border-top: 1px solid var(--zoopedia-footer-border) !important;
+}
+
+.footer-legal-links {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0 15px !important;
+}
+    </style>
+</head>
+<body>
+                <nav class="zoopedia-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo"><img src="img/fet%20page/Zooplogo.png" alt="logo"></a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="prdouct catalog.html">Creature Catalog</a>
+                <a href="about.html">Feed</a>
+                <a href="contact.html">Contact</a>
+                <a href="zoopedia_feature.html" title="Stories"><i class="fas fa-book"></i></a>
+                <a href="#" class="auth-trigger" onclick="openAuthModal()">Sign In</a>
+            </div>
+
+            <div class="nav-icons">
+                <label class="bb8-toggle">
+                    <input class="bb8-toggle__checkbox" type="checkbox" id="darkModeToggle">
+                    <div class="bb8-toggle__container">
+                        <div class="bb8-toggle__scenery">
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div><div class="bb8-toggle__star"></div>
+                            <div class="bb8-toggle__star"></div><div class="tatto-1"></div><div class="tatto-2"></div>
+                            <div class="gomrassen"></div><div class="hermes"></div><div class="chenini"></div>
+                            <div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div><div class="bb8-toggle__cloud"></div>
+                        </div>
+                        <div class="bb8">
+                            <div class="bb8__head-container">
+                                <div class="bb8__antenna"></div><div class="bb8__antenna"></div><div class="bb8__head"></div>
+                            </div>
+                            <div class="bb8__body"></div>
+                        </div>
+                        <div class="artificial__hidden"><div class="bb8__shadow"></div></div>
+                    </div>
+                </label>
+                <a class="vault-link" href="WildlifeVault.html">
+                    <i class="fa-solid fa-vault"></i> Animal Vault
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="magic-cursor" id="magic-cursor"></div>
+
+    <section class="rescue-hero" id="rescue-mission">
+        <div class="rescue-ui-top">
+            <h1 class="exact-title">SAVE THE<br>WILDERNESS</h1>
+            <p class="exact-tagline">Make it a better place</p>
+            
+            <div class="exact-controls">
+                <div class="pill-input">
+                    <i class="fa-solid fa-dollar-sign"></i>
+                    <input type="number" id="donation-amount" placeholder="" oninput="checkDonation()">
+                </div>
+                
+                <button class="pill-btn" id="mission-lock" onclick="startRescue()">
+                    <i class="fa-solid fa-lock"></i>
+                </button>
+            </div>
+            <p id="rescue-hint" style="display: none;">Enter an amount to unlock the rescue mission</p>
+        </div>
+
+        <div id="rescue-chain" class="rescue-chain" style="display: none;">
+            <div class="chain-segment left"></div>
+            <div class="chain-lock"><i class="fas fa-link"></i></div>
+            <div class="chain-segment right"></div>
+            <div class="chain-hint">Cut the chain with your finger to rescue</div>
+        </div>
+
+        <div id="camera-status" style="position: fixed; bottom: 20px; left: 20px; color: #fff; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 5px; font-size: 10px; z-index: 1000; pointer-events: none;">
+            Camera: Initializing...
+        </div>
+
+        <!-- Freedom Celebration Audio -->
+        <audio id="release-audio" src="audio/other/resc.mpeg" preload="auto"></audio>
+
+        <!-- Post-Rescue Success View (SIDE PANEL) -->
+        <div id="post-rescue-view">
+            <div class="success-card">
+                <div class="rescue-summary">
+                    <h1>THANK YOU</h1>
+                    <div class="rescue-tagline">Protecting Animals</div>
+                    <p class="desc">Your contribution of $<span id="final-amount-card">50</span> has directly funded the safe relocation of this majestic animal.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tracking elements: Using opacity instead of display:none to keep browser processing active -->
+        <video id="hand-video" autoplay playsinline style="position: fixed; top: 0; left: 0; width: 640px; height: 480px; opacity: 0; pointer-events: none; z-index: -1;"></video>
+        <canvas id="rescue-canvas" style="display: none;"></canvas>
+    </section>
+
+    <!-- Wallet Management Modal -->
+    <div class="wallet-overlay" id="wallet-modal">
+        <div class="wallet-sheet">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="margin: 0; font-size: 28px;">Wallet</h2>
+                <i class="fa-solid fa-xmark" style="cursor: pointer; font-size: 24px;" onclick="closeWallet()"></i>
+            </div>
+            
+            <div id="wallet-cards-container" class="wallet-card-list">
+                <!-- Cards will load here -->
+            </div>
+
+            <div id="no-cards-msg" style="text-align: center; color: #86868b; margin: 40px 0; display: none;">
+                <i class="fa-solid fa-credit-card" style="font-size: 50px; margin-bottom: 15px; opacity: 0.2;"></i>
+                <p>No cards in your wallet yet.</p>
+            </div>
+
+            <button class="btn-zoopedia-black" id="add-card-trigger" onclick="showAddCardForm()" style="margin-top: 20px;">+ Add New Card</button>
+
+            <!-- Add Card Form -->
+            <form id="add-card-form" class="add-card-form" onsubmit="saveNewCard(event)">
+                <h3 style="margin-bottom: 20px;">New Card</h3>
+                <input type="text" name="holder" placeholder="Cardholder Name" required>
+                <input type="text" name="number" placeholder="Card Number (16 Digits)" maxlength="16" required>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                    <input type="text" placeholder="CVV" maxlength="3" required>
+                </div>
+                <button type="submit" class="btn-zoopedia-black">Save Card</button>
+                <button type="button" class="btn-pay" onclick="hideAddCardForm()" style="width: 100%; margin-top: 10px; background: #86868b;">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tap to Pay Overlay -->
+    <div class="tap-overlay" id="tap-overlay">
+        <div class="tap-card">
+            <img src="img/fet page/Zooplogo.png" alt="Zoopedia" class="popup-logo">
+            <span class="zoopedia-pay-badge">SECURE CHECKOUT</span>
+            
+            <!-- Step 1: Select Card -->
+            <div id="wallet-selection-view">
+                <h3 id="auth-title-laptop">Select Card</h3>
+                <p id="auth-desc-laptop" style="margin-bottom: 20px;">Choose a card to complete your payment.</p>
+                <div id="pay-modal-cards" style="text-align: left; margin-bottom: 30px;">
+                    <!-- Cards will be listed here -->
+                </div>
+                <button class="btn-zoopedia-black" id="confirm-card-btn" onclick="goToFingerprint()" disabled>Continue to Verify</button>
+                <p id="no-card-error" style="color: #ff3b30; font-size: 12px; margin-top: 15px; display: none;">Please add a card to your wallet first.</p>
+            </div>
+
+            <!-- Step 2: Fingerprint -->
+            <div id="tap-instruction" style="display: none;">
+                <div class="sensor-area" id="sensor-area">
+                    <i class="fa-solid fa-fingerprint phone-icon"></i>
+                    <svg style="position: absolute; width: 150px; height: 150px; transform: rotate(-90deg);">
+                        <circle id="progress-ring" cx="75" cy="75" r="70" stroke="#0071e3" stroke-width="4" fill="transparent" stroke-dasharray="439.8" stroke-dashoffset="439.8"></circle>
+                    </svg>
+                    <div id="listening-status" style="position: absolute; bottom: -35px; font-size: 10px; color: #0071e3; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: none;">Waiting for Biometrics...</div>
+                </div>
+                
+                <h3 id="auth-title-laptop">Confirm Identity</h3>
+                <p id="auth-desc-laptop">Use the fingerprint sensor on your phone to authorize this Zoopedia purchase.</p>
+                
+                <!-- Added QR Code for easier testing -->
+                <div id="tap-qr-products" style="margin: 20px auto; width: 128px; height: 128px; background: #fff; padding: 10px; border-radius: 12px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);"></div>
+                <p style="font-size: 12px; color: #86868b;">Scan to connect your phone</p>
+
+                <div id="debug-status">Secure Link: Connected</div>
+            </div>
+
+            <div id="tap-success" style="display: none;">
+                <i class="fa-solid fa-circle-check success-tick"></i>
+                <h3 id="auth-title-laptop" style="margin-top: 20px;">Done</h3>
+                <p id="auth-desc-laptop">Payment successful</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Card Modal (Products Page) -->
+    <div class="payment-modal-overlay" id="add-card-overlay-products" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); justify-content: center; align-items: center; z-index: 12000;">
+        <div class="tap-card" style="width: 400px; padding: 40px; background: #fff; border-radius: 30px; text-align: center;">
+            <h2 style="margin-bottom: 10px; font-weight: 700;">Add Card</h2>
+            <p style="color: #86868b; margin-bottom: 25px; font-size: 14px;">You need to add a payment card to continue with the rescue mission.</p>
+            <form id="add-card-form-products" onsubmit="saveNewCardProducts(event)">
+                <div class="input-group" style="text-align: left; margin-bottom: 15px; border:none;">
+                    <input type="text" id="card-holder-products" placeholder="Card Holder Name" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #d2d2d7; outline: none; font-size: 14px;">
+                </div>
+                <div class="input-group" style="text-align: left; margin-bottom: 15px; border:none;">
+                    <input type="text" id="card-number-products" placeholder="Card Number" maxlength="16" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #d2d2d7; outline: none; font-size: 14px;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                    <input type="text" id="card-expiry-products" placeholder="MM/YY" maxlength="5" required style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #d2d2d7; outline: none; font-size: 14px;">
+                    <input type="password" id="card-cvv-products" placeholder="CVV" maxlength="3" required style="flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #d2d2d7; outline: none; font-size: 14px;">
+                </div>
+                <button type="submit" class="btn-zoopedia-black" style="width: 100%; margin-bottom: 12px; height: 50px; font-size: 16px;">Save & Continue</button>
+                <button type="button" style="background: none; border: none; color: #0071e3; font-weight: 600; cursor: pointer; font-size: 14px;" onclick="$('#add-card-overlay-products').hide(); closeTapOverlay();">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        let sensorPollInterval;
+        let userCards = [];
+        let selectedPayCard = null;
+        let isLockCut = false;
+        let handCamera = null;
+
+        // Global Success Sound
+        const successSound = new Audio('audio/other/success.wav');
+        function playSuccessChime() {
+            successSound.currentTime = 0;
+            successSound.play().catch(e => console.log("Audio block:", e));
+        }
+
+        // --- MediaPipe Hand Tracking ---
+        const videoElement = document.getElementById('hand-video');
+        const canvasElement = document.getElementById('rescue-canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        const magicCursor = document.getElementById('magic-cursor');
+        const missionLock = document.getElementById('mission-lock');
+
+        function onResults(results) {
+            console.log("Hand Results:", results.multiHandLandmarks?.length || 0);
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                $('#camera-status').text("Camera: Tracking Active").css('color', '#32d74b');
+                isTrackingHand = true;
+                magicCursor.style.display = 'block';
+                const landmarks = results.multiHandLandmarks[0];
+                const indexFinger = landmarks[8];
+                
+                // Mirror the X coordinate for natural interaction
+                const x = (1 - indexFinger.x) * window.innerWidth;
+                const y = indexFinger.y * window.innerHeight;
+
+                magicCursor.style.left = x + 'px';
+                magicCursor.style.top = y + 'px';
+                magicCursor.style.display = 'block'; // Ensure it's visible
+
+                // Handle Hover over Ready Button
+                if (missionLock.classList.contains('ready')) {
+                    // Show chain when ready
+                    $('#rescue-chain').fadeIn();
+
+                    const lockRect = missionLock.getBoundingClientRect();
+                    const dist = Math.sqrt(Math.pow(x - (lockRect.left + lockRect.width/2), 2) + Math.pow(y - (lockRect.top + lockRect.height/2), 2));
+                    if (dist < 80) {
+                        magicCursor.classList.add('active');
+                    } else {
+                        magicCursor.classList.remove('active');
+                    }
+
+                    // Chain Cutting Collision Detection
+                    const chain = document.getElementById('rescue-chain');
+                    if (chain && $(chain).is(':visible')) {
+                        const chainRect = chain.getBoundingClientRect();
+                        // Increased tolerance for easier cutting (30px instead of 10px)
+                        if (y >= chainRect.top - 30 && y <= chainRect.bottom + 30) {
+                            console.log("CHAIN CUT!");
+                            chain.classList.add('cut');
+                            
+                            // Play Freedom Audio IMMEDIATELY upon cutting
+                            const audio = document.getElementById('release-audio');
+                            if (audio) {
+                                audio.currentTime = 0;
+                                audio.play();
+                            }
+
+                            setTimeout(() => {
+                                $(chain).fadeOut(300, function() {
+                                    startRescue();
+                                });
+                            }, 200);
+                        }
+                    }
+                }
+            } else {
+                magicCursor.style.display = 'none';
+                if (isTrackingHand) {
+                    $('#camera-status').text("Camera: Online (Hand Lost)").css('color', '#ff9900');
+                    isTrackingHand = false;
+                }
+            }
+        }
+
+        let isTrackingHand = false;
+
+        const hands = new Hands({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}` });
+        hands.setOptions({ 
+            maxNumHands: 1, 
+            modelComplexity: 0, // 0 is much faster and often more reliable on laptops
+            minDetectionConfidence: 0.5, 
+            minTrackingConfidence: 0.5 
+        });
+        hands.onResults(onResults);
+
+        handCamera = new Camera(videoElement, {
+            onFrame: async () => { 
+                if (!hands) return;
+                try {
+                    await hands.send({image: videoElement}); 
+                } catch (e) {
+                    // console.error("Hands Send Error:", e);
+                }
+            },
+            width: 640, height: 480
+        });
+        handCamera.start().then(() => {
+            console.log("Camera started successfully");
+            $('#camera-status').text("Camera: Online (Awaiting Hand)");
+        }).catch(err => {
+            console.error("Camera start failed:", err);
+            $('#camera-status').text("Camera Error: " + err.message).css('color', '#ff3b30');
+        });
+
+        // --- Rescue Logic ---
+        window.checkDonation = function() {
+            const amount = $('#donation-amount').val();
+            const btn = $('#mission-lock');
+            if (amount > 0) {
+                btn.addClass('ready').find('i').removeClass('fa-lock').addClass('fa-lock-open');
+            } else {
+                btn.removeClass('ready').find('i').removeClass('fa-lock-open').addClass('fa-lock');
+            }
+        };
+
+        window.startRescue = function() {
+            if (!$('#mission-lock').hasClass('ready') || isLockCut) return;
+            
+            isLockCut = true;
+            // TURN OFF CAMERA to focus on payment
+            if (handCamera) {
+                handCamera.stop();
+                videoElement.srcObject.getTracks().forEach(track => track.stop());
+                magicCursor.style.display = 'none';
+            }
+
+            const amount = $('#donation-amount').val();
+            $('#final-amount').text(amount);
+            openTapOverlay();
+        };
+
+        // --- Wallet Logic ---
+        window.openWallet = function() {
+            $('#wallet-modal').css('display', 'flex');
+            fetchCards();
+        };
+
+        window.closeWallet = function() {
+            $('#wallet-modal').hide();
+            hideAddCardForm();
+        };
+
+        function fetchCards(isAutomatic = false) {
+            $.get('member6_wallet_api.php?action=fetch', function(res) {
+                if (res.success) {
+                    userCards = res.cards;
+                    renderWalletCards();
+                    
+                    if (isAutomatic && userCards.length === 0) {
+                        // Automatically show the add card popup if starting payment and no cards
+                        $('#tap-overlay').hide();
+                        $('#add-card-overlay-products').css('display', 'flex');
+                    }
+                }
+            });
+        }
+
+        window.saveNewCardProducts = function(e) {
+            e.preventDefault();
+            const cardData = {
+                holder: $('#card-holder-products').val(),
+                number: $('#card-number-products').val(),
+                expiry: $('#card-expiry-products').val()
+            };
+
+            const btn = $('#add-card-form-products button[type="submit"]');
+            btn.prop('disabled', true).text('Saving...');
+
+            fetch('member6_wallet_api.php?action=add', {
+                method: 'POST',
+                body: JSON.stringify(cardData),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    $('#add-card-overlay-products').hide();
+                    openTapOverlay(); // Re-open payment flow
+                } else {
+                    alert(res.message);
+                }
+            })
+            .finally(() => {
+                btn.prop('disabled', false).text('Save & Continue');
+            });
+        };
+
+        function renderWalletCards() {
+            const container = $('#wallet-cards-container');
+            const payContainer = $('#pay-modal-cards');
+            container.empty(); payContainer.empty();
+
+            if (userCards.length === 0) {
+                $('#no-cards-msg').show();
+                $('#add-card-trigger').show();
+                $('#confirm-card-btn').prop('disabled', true);
+                $('#no-card-error').show();
+            } else {
+                $('#no-cards-msg').hide(); $('#no-card-error').hide();
+                userCards.forEach(card => {
+                    container.append(`
+                        <div class="cc-card">
+                            <div class="cc-type">${card.card_type}</div>
+                            <div class="cc-number">${card.masked_number}</div>
+                            <div class="cc-bottom"><div>${card.card_holder}</div><div>EXP: ${card.expiry_date}</div></div>
+                        </div>
+                    `);
+                    payContainer.append(`
+                        <div class="mini-card-item" onclick="selectPayCard(${card.id}, this)">
+                            <div class="mini-card-icon"></div>
+                            <div style="flex-grow: 1;">
+                                <div style="font-weight: 600; font-size: 14px;">${card.card_type} •••• ${card.card_number.slice(-4)}</div>
+                                <div style="font-size: 11px; color: #86868b;">${card.card_holder}</div>
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+        }
+
+        window.selectPayCard = function(id, el) {
+            $('.mini-card-item').removeClass('active');
+            $(el).addClass('active');
+            selectedPayCard = id;
+            $('#confirm-card-btn').prop('disabled', false);
+        };
+
+        window.showAddCardForm = function() {
+            $('#wallet-cards-container').hide(); $('#add-card-trigger').hide(); $('#add-card-form').fadeIn();
+        };
+
+        window.hideAddCardForm = function() {
+            $('#add-card-form').hide(); $('#wallet-cards-container').fadeIn(); $('#add-card-trigger').fadeIn();
+        };
+
+        window.saveNewCard = function(e) {
+            e.preventDefault();
+            const formData = {
+                holder: $('input[name="holder"]').val(),
+                number: $('input[name="number"]').val(),
+                expiry: $('input[name="expiry"]').val()
+            };
+            $.ajax({
+                url: 'member6_wallet_api.php?action=add',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function(res) {
+                    if (res.success) { alert(res.message); fetchCards(); hideAddCardForm(); }
+                }
+            });
+        };
+
+        window.goToFingerprint = function() {
+            $('#wallet-selection-view').fadeOut(300, function() {
+                $('#tap-instruction').fadeIn(300);
+                startSensing();
+            });
+        };
+
+        window.openTapOverlay = function() {
+            // Check login first
+            $.get('check_session.php', function(session) {
+                if (!session.logged_in) {
+                    alert("Please sign in to start the rescue mission.");
+                    openAuthModal();
+                    return;
+                }
+
+                $('#tap-overlay').css('display', 'flex');
+                $('#wallet-selection-view').show();
+                $('#tap-instruction').hide();
+                $('#tap-success').hide();
+                setLaptopActive(true); 
+                fetchCards(true); // Pass true to trigger automatic add card popup if needed
+            });
+        };
+
+        window.closeTapOverlay = function() {
+             $('#tap-overlay').fadeOut(500, function() {
+                stopSensing();
+                setLaptopActive(false);
+                resetSensorBridge(); 
+                if (!$('#rescue-mission').hasClass('cage-opened')) {
+                    isLockCut = false;
+                    // Resume Camera if they cancelled
+                    handCamera.start();
+                }
+            });
+        };
+
+        function setLaptopActive(status) {
+            $.ajax({ url: 'sensor_bridge.php', type: 'POST', data: JSON.stringify({ laptop_active: status }), contentType: 'application/json' });
+        }
+
+        function resetSensorBridge() {
+            $.ajax({ url: 'sensor_bridge.php', type: 'POST', data: JSON.stringify({ reset: true }), contentType: 'application/json' });
+        }
+
+        function startSensing() {
+            $('#listening-status').fadeIn(300);
+            $('#debug-status').text("Secure Link: Waiting for Biometrics...");
+
+            // Smart URL Detection: Check for ngrok tunnel first, then fallback to Local IP
+            const tryGetTunnel = async () => {
+                try {
+                    // Try to hit the local ngrok API to find the public URL
+                    const res = await fetch('http://127.0.0.1:4040/api/tunnels');
+                    const data = await res.json();
+                    if (data.tunnels && data.tunnels.length > 0) {
+                        return data.tunnels[0].public_url;
+                    }
+                } catch (e) {
+                    console.log("No active ngrok tunnel found on port 4040. Falling back to local IP.");
+                }
+                
+                // Fallback: Use the detected Local IP
+                const ipRes = await fetch('get_local_ip.php');
+                const ipData = await ipRes.json();
+                return `http://${ipData.ip}`;
+            };
+
+            tryGetTunnel().then(baseUrl => {
+                const qrContainer = document.getElementById("tap-qr-products");
+                qrContainer.innerHTML = "";
+                
+                const mobileUrl = `${baseUrl}/Zoopedia-main/sensor.php`;
+                console.log("Mobile URL for QR:", mobileUrl);
+
+                new QRCode(qrContainer, {
+                    text: mobileUrl,
+                    width: 150,
+                    height: 150,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.M
+                });
+            });
+
+            if (sensorPollInterval) clearInterval(sensorPollInterval);
+            sensorPollInterval = setInterval(() => {
+                $.ajax({
+                    url: 'sensor_bridge.php', type: 'GET', cache: false,
+                    success: function(data) {
+                        if (data.triggered) {
+                            let percent = Math.round((data.pressure || 0) * 100);
+                            updateProgress(percent);
+                            if (data.verified) {
+                                $('#debug-status').text("BIOMETRICS VERIFIED").css('color', '#34c759');
+                                $('#progress-ring').attr('stroke', '#34c759');
+                                completePayment();
+                            } else if (data.failed) {
+                                $('#debug-status').text("AUTHENTICATION FAILED").css('color', '#ff3b30');
+                                $('#progress-ring').attr('stroke', '#ff3b30');
+                                setTimeout(() => { resetSensorBridge(); updateProgress(0); }, 2000);
+                            }
+                        }
+                    }
+                });
+            }, 300);
+        }
+
+        function updateProgress(val) {
+            const circle = document.getElementById('progress-ring');
+            if (!circle) return;
+            const circumference = 2 * Math.PI * 70;
+            circle.style.strokeDashoffset = circumference - (val / 100) * circumference;
+        }
+
+        function stopSensing() { $('#listening-status').fadeOut(300); clearInterval(sensorPollInterval); }
+
+        function completePayment() {
+            stopSensing();
+            $('#tap-instruction').fadeOut(300, function() {
+                $('#tap-success').fadeIn(300);
+                playSuccessChime(); // Play the satisfying Ding!
+                $('#rescue-mission').addClass('cage-opened'); 
+                
+                // FORCE SWAP IMAGE immediately for the next mission
+                const missionEl = document.getElementById('rescue-mission');
+                if (missionEl) {
+                    missionEl.style.setProperty('background-image', 'url("img/elements/mon2.png")', 'important');
+                }
+
+                // Play Freedom Audio (LOOP)
+                const audio = document.getElementById('release-audio');
+                if (audio) { audio.loop = true; audio.play(); }
+
+                setTimeout(() => {
+                    closeTapOverlay();
+                    const amount = $('#donation-amount').val();
+                    $('#final-amount-card').text(amount);
+                    
+                    // FORCE HIDE ALL CONTROLS
+                    $('.rescue-ui-top').attr('style', 'display: none !important');
+                    $('#rescue-chain').attr('style', 'display: none !important');
+                    $('#rescue-hint').attr('style', 'display: none !important');
+                    
+                    $('#post-rescue-view').fadeIn(800); // Slide in side panel
+
+                    // AUTO RESET mission logic (no button needed)
+                    setTimeout(() => {
+                        isLockCut = false;
+                        $('#donation-amount').val('');
+                        $('#mission-lock').removeClass('ready').find('i').removeClass('fa-lock-open').addClass('fa-lock');
+                        $('#rescue-mission').removeClass('cage-opened');
+                        handCamera.start();
+                    }, 500);
+                }, 3000);
+            });
+        }
+        $(document).ready(function() {
+            canvasElement.width = window.innerWidth;
+            canvasElement.height = window.innerHeight;
+            $(window).resize(() => {
+                canvasElement.width = window.innerWidth;
+                canvasElement.height = window.innerHeight;
+            });
+        });
+    </script>
+    <!-- Zoopedia Footer -->
+  <footer class="zoopedia-footer">
+    <div class="footer-content">
+      <nav class="footer-breadcrumb">
+        <a href="index.html"><i class="fas fa-home"></i></a>
+        <span class="separator">&gt;</span>
+        <span>Zoopedia Prime</span>
+      </nav>
+
+      <div class="footer-directory">
+        <div class="footer-column">
+          <h3>Shop and Learn</h3>
+          <ul>
+            <li><a href="prdouct catalog.html">Creature Catalog</a></li>
+            <li><a href="wildlife.html">Wild Life</a></li>
+            <li><a href="dommestic.html">Domestic Pets</a></li>
+            <li><a href="WildlifeVault.html">Animal Vault</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="research_lab.html">Research Hub</a></li>
+            <li><a href="DigitalLibrary.html">Digital Library</a></li>
+            <li><a href="story.html">Stories</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Zoopedia Account</h3>
+          <ul>
+            <li><a href="#" onclick="openAuthModal()">Manage Your Account</a></li>
+            <li><a href="checkout.html">Zoopedia Store</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About Zoopedia</h3>
+          <ul>
+            <li><a href="about.html">Newsroom</a></li>
+            <li><a href="documentation.html">Ethics &amp; Privacy</a></li>
+            <li><a href="contact.html">Contact Zoopedia</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Safety &amp; Support</h3>
+          <ul>
+            <li><a href="sos_911.html">SOS 911</a></li>
+            <li><a href="sos_radar.html">SOS Radar</a></li>
+            <li><a href="calling.html">Support Center</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-more-ways">
+        More ways to explore: <a href="contact.html">Find a Zoopedia Specialist</a> or <a href="prdouct catalog.html">other retailer</a> near you. Or call 1-800-MY-ZOOPEDIA.
+      </div>
+
+      <section class="footer-legal">
+        <div class="footer-legal-copyright">
+          Copyright &copy; 2026 Zoopedia Prime Inc. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Use</a>
+          <a href="#">Sales and Refunds</a>
+          <a href="#">Legal</a>
+          <a href="#">Site Map</a>
+        </div>
+        <div class="footer-legal-locale">
+          United States
+        </div>
+      </section>
+    </div>
+  </footer>
+  <script src="zoopedia-footer.js"></script>
+</body>
+</html>

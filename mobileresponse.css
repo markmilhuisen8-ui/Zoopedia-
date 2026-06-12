@@ -1,0 +1,396 @@
+/* --- MOBILE RESPONSIVE STYLES (Max-width: 576px) --- */
+@media (max-width: 576px) {
+    
+    /* 1. Body & Background */
+    body {
+        /* On mobile, 'fixed' often breaks. 'scroll' is more reliable */
+        background-attachment: scroll !important; 
+        
+        /* Focus the background on the center of the image */
+        background-position: center center;
+        
+        /* Scale the image so it doesn't look stretched or pixelated */
+        background-size: auto 100%; 
+    }
+    
+
+.full-width-banner {
+    /* 1. Swap the background image for mobile */
+    background-image: url('img/banners/Did\ you\ know\ banner1\ for\ mob.png') !important; 
+    
+    /* 2. Adjust height for mobile aspect ratio */
+    height: 350px !important; 
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+
+
+
+.btn-outline-primary2 {
+    /* 3. Reset the desktop margin-bottom */
+    margin-bottom: 0 !important; 
+    
+    /* 4. Use absolute positioning to place it exactly where you want on the mobile image */
+    position: absolute;
+    bottom: 180px; /* Adjust this value to move it up or down */
+    left: 20%;
+    transform: translateX(-50%);
+    
+    /* 5. Scale down the button slightly for small screens */
+    padding: 10px 25px !important;
+    font-size: 0.9rem;
+}
+    
+    /* 2. Navigation Bar */
+    .custom-nav {
+        height: auto;
+        padding: 10px 0;
+    }
+    .nav-logo {
+        height: 35px; /* Smaller logo for mobile header */
+    }
+    #navbarNav {
+        background-color: #035e21;
+        padding: 20px 0;
+        text-align: center;
+    }
+    .nav-link1, .nav-link2, .nav-link3, .nav-link4 {
+        padding: 10px 0;
+        display: block; /* Stack links vertically in the burger menu */
+    }
+
+
+    
+
+
+            /* 3. Hero Banners mobile domestic animals  banner */
+ #banneraboutus {
+                background-image: url('img/banners/Join\ us.png'); 
+        width: 100%;
+        
+
+        background-size: cover; 
+        background-position: center;
+
+
+        aspect-ratio: 16 / 9; 
+
+
+        min-height: 300px; 
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+
+
+    
+    /* 4. The Card Grid (2 per row) */
+@media (max-width: 576px) {
+    /* 1. Reset card height to fit content */
+   .custom-card {
+    border: 4px solid #035e21; 
+    border-radius: 20px;      
+    padding: 20px;             
+    background-color: rgb(241, 227, 208);
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Important for equal height rows */
+}
+}
+
+    
+ @media (max-width: 576px) {
+    
+    .maincardimg {
+        display: block !important;       /* This is the key to making margins work */
+        width: 128px !important;         /* Consistent size for the circles */
+        height: 128px !important;
+        border-radius: 50% !important;   /* Keeps it a perfect circle */
+        object-fit: cover !important;    /* Ensures the animal face isn't stretched */
+        
+        /* Centering Logic */
+        margin-left: -6px !important;    
+        margin-right: auto !important;
+        margin-top: -10px !important;    /* Pulls it slightly up if you want that overlapping look */
+        margin-bottom: 15px !important;  /* Space between image and 'Lion/Tiger' text */
+        
+        border: 4px solid #035e21 !important; 
+        background-color: #f1e3d0;        /* Matches your card background */
+    }
+    
+ .card-body {
+        text-align: center !important;   /* Centers the Title and Description */
+        padding: 10px !important;
+
+    }
+}
+
+    /* 3. Make sure the title and text align to center */
+    .custom-card h4, 
+    .custom-card p.card-text {
+        text-align: center !important;
+        width: 100%;
+    }
+}
+
+    /* 5. Did You Know Banner */
+    .full-width-banner {
+        height: 300px;
+    }
+    .btn-outline-primary2 {
+        margin-bottom: -180px; /* Adjust button position on the banner */
+        padding: 10px 20px;
+    }
+
+    /* 6. Notes Section */
+    .card-has-bg {
+        min-height: 180px;
+    }
+
+    /* 7. Newsletter Section */
+    .newsletter-banner .container {
+        min-height: auto;
+        padding: 20px 10px;
+    }
+
+    @media (max-width: 576px) {
+    .newsletter-banner {
+        /* Replace 'newsletter-mob.png' with your actual mobile filename */
+        background-image: url('img/banners/newsletter\ banner\ mob.png') !important;
+        
+        /* Adjust padding for mobile if the image has a different focal point */
+        padding: 40px 0; 
+        background-position: center;
+        background-size: cover;
+    }
+
+    .newsletter-banner .container {
+    min-height: 350px; /* Gives the mobile image more vertical room to show */
+}
+}
+
+    .newsletter-title {
+        margin-left: 0;
+        text-align: center;
+        font-size: 1.4rem;
+        transform: translateX(-40px);
+
+    }
+    .newsletter-form .input-group {
+        margin-left: 0;
+        margin-top: 20px;
+        padding: 20px;
+        right: 35px;
+        transform: translateY(-95px);
+    }
+
+    /* 8. Footer */
+    .footer-layout {
+        grid-template-columns: 1fr; /* Stack footer sections vertically */
+        gap: 40px;
+        text-align: center;
+    }
+    .logo-main, .logo-accent {
+        right: 0; /* Remove the offset positioning used for desktop */
+    }
+    .footer-section {
+        padding: 0 20px;
+    }
+    
+    /* 9. Pagination */
+    .btn-outline-danger {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+    .pagination-img {
+        width: 25px;
+        height: 25px;
+    }
+
+
+/* Mobile Navbar Fix */
+@media (max-width: 991px) {
+    #navbarNav {
+        background-color: #035e21; /* Match your brand green */
+        padding: 20px;
+        border-radius: 0 0 15px 15px;
+        text-align: center;
+    }
+    
+    .nav-item {
+        margin-bottom: 10px;
+    }
+}
+
+
+        /* Mobile adjustment for Profile Picture on Single Prouct Page */
+        @media (max-width: 576px) {
+            .profile-icon {
+                width: 250px;
+                height: 250px;
+                border-radius: 30px;
+            }
+        }
+
+
+        /* Mobile Design forAbout and Contact */
+
+        /* Mobile Responsive Adjustments */
+
+/* 1. General Container Padding */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    /* 2. Typography scaling */
+    .Grids, .Teamtxt {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    .Abouttext {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    /* 3. Navigation adjustments */
+    .nav-logo {
+        height: 40px; /* Smaller logo for mobile */
+    }
+
+    #team-section img {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* 5. Table Responsiveness */
+    .table-responsive {
+        font-size: 0.85rem;
+        overflow-x: auto;
+    }
+
+    /* 6. Contact Form & Info */
+    .detailsector {
+        padding: 15px;
+        margin-bottom: 40px;
+    }
+
+
+    .custom-join-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        bottom: 10%; /* Adjust position so it doesn't cover faces in images */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* 8. Footer Layout */
+    .footer-layout {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .store-buttons {
+        justify-content: center;
+    }
+}
+
+/* Extra Small Devices (Phones) */
+@media (max-width: 480px) {
+    #team-section .col-md-4 {
+        width: 100%; /* Stack team members vertically on very small screens */
+    }
+
+    .footer-logo {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* Base Styles for Desktop (ensure these exist) */
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 50px;
+    gap: 20px;
+}
+
+.text {
+    flex: 1;
+}
+
+.image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* --- Mobile Responsive Styles --- */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column; /* Stacks text on top of image */
+        padding: 20px;
+        text-align: center; /* Centers text for better mobile aesthetics */
+    }
+
+    .text h2 {
+        font-size: 1.8rem;
+    }
+
+    .text p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .image {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    /* Removes the forced line breaks <br> on mobile for better flow */
+    .text br {
+        display: none;
+    }
+}
+
+/* 2. Mobile-Only Logic */
+@media (max-width: 767px) {
+    .mobile-only-banner {
+        width: 100%;
+        height: 60vh; /* Adjust height to show more/less of your square image */
+        object-fit: cover; /* This crops the 1080x1080 image to fit the screen */
+    }
+
+.custom-join-btn {
+        /* Pushes the button down (85% from the top) */
+        top: 78% !important; 
+        
+        /* Centers it horizontally */
+        left: 10% !important;
+        right: auto !important;
+        
+        /* Ensures the centering is mathematically perfect */
+        transform: translateY(35px) !important;
+
+        
+        /* Mobile-friendly styling */
+        width: 80%;
+        padding: 12px 0 !important;
+        font-size: 0.9rem !important;
+        text-align: center;
+    }
+
+}
+
