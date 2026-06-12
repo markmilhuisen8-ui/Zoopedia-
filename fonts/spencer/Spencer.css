@@ -1,0 +1,12 @@
+/* Webfont: Spencer-Regular */@font-face {
+    font-family: 'Spencer';
+    src: url('Spencer.eot'); /* IE9 Compat Modes */
+    src: url('Spencer.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('Spencer.woff') format('woff'), /* Modern Browsers */
+         url('Spencer.woff2') format('woff2'), /* Modern Browsers */
+         url('Spencer.ttf') format('truetype'); /* Safari, Android, iOS */
+             font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+
